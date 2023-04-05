@@ -7,29 +7,7 @@
   <title>BAYC</title>
 </head>
 <body>
-  <div style="min-height: 2000px"><a href="https://bibulous.eth.limo">🦍</a></div> const bot = {
-  name: "MyBot",
-  greeting: "Hello! How can I assist you today?",
-  responses: {
-    "hello": "Hi there!",
-    "how are you": "I'm doing well, thank you for asking.",
-    "goodbye": "Goodbye! Have a great day!",
-  },
-  getResponse: function(input) {
-    const response = this.responses[input.toLowerCase()] || "I'm sorry, I don't understand. Can you please try again?";
-    return response;
-  }
-};
-
-const inputElement = document.querySelector("#input");
-const outputElement = document.querySelector("#output");
-
-document.querySelector("#submit").addEventListener("click", function() {
-  const input = inputElement.value;
-  const response = bot.getResponse(input);
-  outputElement.innerText = response;
-});
-
+  <div style="min-height: 2000px"><a href="https://bibulous.eth.limo">🦍</a></div>
 </body>
 <script src="./index.js"></script>
 </html>
