@@ -7,9 +7,34 @@
   <title>BAYC</title>
 </head>
 <body>
-  <div style="min-height: 2000px"><a href="https://bibulous.eth.limo">🦍</a></div> <input type="text" id="user-input">
-<button onclick="handleInput()">Send</button>
-<div id="bot-output"></div>
+  <div style="min-height: 2000px"><a href="https://bibulous.eth.limo">🦍</a></div> <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>AI Bot</title>
+  </head>
+  <body>
+    <label for="user-message">Enter your message:</label>
+    <input type="text" id="user-message">
+    <button id="submit-button">Submit</button>
+    <div id="bot-response"></div>
+    
+    <script>
+      const submitButton = document.getElementById('submit-button');
+      const userMessageInput = document.getElementById('user-message');
+      const botResponseDiv = document.getElementById('bot-response');
+
+      submitButton.addEventListener('click', function() {
+        const userMessage = userMessageInput.value;
+        // Replace this with your own bot response code
+        const botResponse = 'Thanks for your message: ' + userMessage;
+        botResponseDiv.innerText = botResponse;
+        userMessageInput.value = '';
+      });
+    </script>
+  </body>
+</html>
+
 
 
 </body>
