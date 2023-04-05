@@ -11,12 +11,12 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>AI Bot</title>
+    <title>MIT Press Bot</title>
   </head>
   <body>
-    <label for="user-message">Enter your message:</label>
+    <label for="user-message">say what you want to say:</label>
     <input type="text" id="user-message">
-    <button id="submit-button">Submit</button>
+    <button id="submit-button">yeah?</button>
     <div id="bot-response"></div>
     
     <script>
@@ -27,7 +27,7 @@
       submitButton.addEventListener('click', function() {
         const userMessage = userMessageInput.value;
         // Replace this with your own bot response code
-        const botResponse = 'Thanks for your message: ' + userMessage;
+        const botResponse = 'just posted: ' + userMessage;
         botResponseDiv.innerText = botResponse;
         userMessageInput.value = '';
       });
