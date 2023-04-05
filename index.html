@@ -7,36 +7,7 @@
   <title>BAYC</title>
 </head>
 <body>
-  <div style="min-height: 2000px"><a href="https://bibulous.eth.limo">🦍</a></div> // Define the bot's responses
-const botResponses = {
-  "hi": "Hello there!",
-  "how are you": "I'm doing well, thanks for asking.",
-  "what's your name": "My name is ChatBot, nice to meet you!",
-  "what do you do": "I'm here to chat with you and answer your questions."
-};
-
-// Define the function to handle user input
-function handleInput() {
-  const input = document.getElementById("user-input").value.toLowerCase();
-  const output = document.getElementById("bot-output");
-  
-  // Check if the bot has a response for the user input
-  if (botResponses.hasOwnProperty(input)) {
-    output.innerText = botResponses[input];
-  } else {
-    output.innerText = "Sorry, I don't understand.";
-  }
-  
-  // Clear the input field
-  document.getElementById("user-input").value = "";
-}
-
-// Add an event listener for when the user hits Enter
-document.getElementById("user-input").addEventListener("keydown", function(event) {
-  if (event.key === "Enter") {
-    handleInput();
-  }
-}); <input type="text" id="user-input">
+  <div style="min-height: 2000px"><a href="https://bibulous.eth.limo">🦍</a></div> <input type="text" id="user-input">
 <button onclick="handleInput()">Send</button>
 <div id="bot-output"></div>
 
