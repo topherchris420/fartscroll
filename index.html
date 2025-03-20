@@ -2,143 +2,212 @@
 <html lang="en">
 <head>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ƨɔimɒnyᗡƐƨɿɘV</title>
+  <title>ƨɔimɒnyᗡƐƨɿɘV - Scalar Explorer</title>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      background-color: black;
+      color: white;
+      transition: background-color 0.5s;
+    }
+    .header {
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+    canvas {
+      border: 1px solid white;
+      margin: 20px auto;
+      display: block;
+      max-width: 100%;
+    }
+    .controls {
+      margin: 20px auto;
+      max-width: 600px;
+      padding: 20px;
+      border: 1px solid #333;
+      border-radius: 10px;
+      background-color: rgba(30, 30, 30, 0.7);
+    }
+    .slider {
+      width: 80%;
+      max-width: 300px;
+      margin: 10px;
+    }
+    section {
+      margin: 40px auto;
+      max-width: 800px;
+      padding: 0 20px;
+    }
+    #changeColorBtn {
+      background-color: #444;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 10px;
+    }
+    #changeColorBtn:hover {
+      background-color: #666;
+    }
+    iframe {
+      max-width: 100%;
+    }
+    a {
+      color: #00ffcc;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .equation {
+      font-style: italic;
+      margin: 20px 0;
+    }
+  </style>
 </head>
 <body>
-<button id="changeColorBtn">turn the light off</button>
-  <p><iframe width="560" height="315" src="https://app.heygen.com/embeds/58ec4c3d17da409d82a20935d74d5b75" title="HeyGen video player" frameborder="0" allow="encrypted-media; fullscreen;" allowfullscreen></iframe></p>
- <p> <a href="https://woodyard.streamlit.app/">👉🏾𝙑𝙚𝙧𝙨3𝘿𝙮𝙣𝙖𝙢𝙞𝙘𝙨 𝙂𝙚𝙣𝘼𝙄 Website👈🏾</a><div style="position: relative; overflow: hidden; aspect-ratio: 1920/1080"><iframe src="https://share.synthesia.io/embeds/videos/2016838e-6dc0-426f-b362-daad40add0f4" loading="lazy" title="Synthesia video player - Vers3Dynamics" allow="encrypted-media; fullscreen;" style="position: absolute; width: 50%; height: 50%; top: 0; left: 0; border: none; padding: 0; margin: 0; overflow:hidden;"></iframe></div> </p>
-<script>
-document.getElementById('changeColorBtn').addEventListener('click', function() {
-  document.body.style.backgroundColor = 'black';
-});
-</script>
-  <p> <span onclick="ShowHiddenText();">𝖂𝖍𝖎𝖘𝖕𝖊𝖗𝖘 𝖔𝖋 𝖙𝖍𝖊 𝕾𝖔𝖚𝖑</span>
-<div id="HiddenTextContainer" style="display: none;"> Vers3Dynamics: Pioneering the Quantum Leap in Creative Expression
+  <button id="changeColorBtn">turn the light off</button>
 
-Christopher Woodyard (Zylo'ktoh Vhil'nar)
-Bethesda, MD  
+  <div class="header">
+    <h1>ƨɔimɒnyᗡƐƨɿɘV - Scalar Explorer</h1>
+    <p>Visualize and explore wave patterns in the quantum realm</p>
+  </div>
 
-Qil'thura Krelinis Zaar
-Zylo'ktoh Zaal Krelinis Vers3Dynamics prae Zor'tuikina Securitath, Syng'larith, et Arthava Ekspretis. Cum Uni'a Histori In Amira et Tekh'ni'a—Glo'ri'a per Decadia de Eksp'renta in A'van Komp'utina Systemath et Pas'sioni por Met'aphysi Studis—Zylo'ktoh Establis Vers3Dynamics prae Transcendis Tradi Limini per Merge Krelinis cum A'van in Qil'thura Komp'utina et De'central Securitath.
-
-In'trovya
-Vers3Dynamics Establis Supra Krydo que Ver Inovis Ex Surgis de Konvergi Diversis Dis'ciplith.</div> </p>
- 
-
- <p> <iframe src="https://vers3dynamics.substack.com/embed" width="480" height="320" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe></p>
+  <canvas id="waveCanvas" width="800" height="400"></canvas>
   
-<script
-    type="module"
-    src="https://agent.d-id.com/v1/index.js"
-    data-name="did-agent"
-    data-mode="fabio"
-    data-client-key="Z29vZ2xlLW9hdXRoMnwxMDQ2MTM0NTk5NTkyMDk2MTIzNzc6OFVCbko0NWdLb3A5Yl92MHNfeE9P"
-    data-agent-id="agt_5_RTFHoS">
-</script>
+  <div class="controls">
+    <label>Frequency: <span id="freqValue">1</span></label>
+    <input type="range" id="frequency" class="slider" min="1" max="50" value="1">
+    <br>
+    <label>Amplitude: <span id="ampValue">50</span></label>
+    <input type="range" id="amplitude" class="slider" min="10" max="100" value="50">
+    <p class="equation">eiθ = cos θ + i sin θ</p>
+  </div>
+
+  <section>
+    <p><iframe width="560" height="315" src="https://app.heygen.com/embeds/58ec4c3d17da409d82a20935d74d5b75" title="HeyGen video player" frameborder="0" allow="encrypted-media; fullscreen;" allowfullscreen></iframe></p>
+    <p><a href="https://woodyard.streamlit.app/">👉🏾𝙑𝙚𝙧𝙨3𝘿𝙮𝙣𝙖𝙢𝙞𝙘𝙨 𝙂𝙚𝙣𝘼𝙄 Website👈🏾</a></p>
+    <div style="position: relative; overflow: hidden; aspect-ratio: 1920/1080">
+      <iframe src="https://share.synthesia.io/embeds/videos/2016838e-6dc0-426f-b362-daad40add0f4" loading="lazy" title="Synthesia video player - Vers3Dynamics" allow="encrypted-media; fullscreen;" style="position: absolute; width: 50%; height: 50%; top: 0; left: 0; border: none; padding: 0; margin: 0; overflow:hidden;"></iframe>
+    </div>
+  </section>
+
+  <section>
+    <p><span onclick="ShowHiddenText();">𝖂𝖍𝖎𝖘𝖕𝖊𝖗𝖘 𝖔𝖋 𝖙𝖍𝖊 𝕾𝖔𝖚𝖑</span></p>
+    <div id="HiddenTextContainer" style="display: none;">
+      Vers3Dynamics: Pioneering the Quantum Leap in Creative Expression
+      
+      Christopher Woodyard (Zylo'ktoh Vhil'nar)
+      Bethesda, MD  
+      
+      Qil'thura Krelinis Zaar
+      Zylo'ktoh Zaal Krelinis Vers3Dynamics prae Zor'tuikina Securitath, Syng'larith, et Arthava Ekspretis. Cum Uni'a Histori In Amira et Tekh'ni'a—Glo'ri'a per Decadia de Eksp'renta in A'van Komp'utina Systemath et Pas'sioni por Met'aphysi Studis—Zylo'ktoh Establis Vers3Dynamics prae Transcendis Tradi Limini per Merge Krelinis cum A'van in Qil'thura Komp'utina et De'central Securitath.
+      
+      In'trovya
+      Vers3Dynamics Establis Supra Krydo que Ver Inovis Ex Surgis de Konvergi Diversis Dis'ciplith.
+    </div>
+  </section>
+
+  <section>
+    <p><iframe src="https://vers3dynamics.substack.com/embed" width="480" height="320" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe></p>
+  </section>
+
+  <section>
+    <p>self-published research paper "Quantum Teleportation: The Dynamic Implications for Object Properties."<a href="https://vers3dynamics.io/shattering-reality-teleportation-and-the-liquid-nature-of-existence">Read the full story</a></p>
+  </section>
+
+  <script>
+    // Original light switch functionality
+    document.getElementById('changeColorBtn').addEventListener('click', function() {
+      document.body.style.backgroundColor = 'black';
+      this.textContent = 'light is off';
+    });
+
+    // Scalar Explorer wave visualization
+    const canvas = document.getElementById("waveCanvas");
+    const ctx = canvas.getContext("2d");
+    let freq = 1, amp = 50;
+    let time = 0;
     
-
- <p>self-published research paper "Quantum Teleportation: The Dynamic Implications for Object Properties."<a href="https://vers3dynamics.io/shattering-reality-teleportation-and-the-liquid-nature-of-existence">Read the full story</a> </p>
-  
-  <iframe
-  src="https://mnemosynehealth.streamlit.app?embed=true"
-  style="height: 450px; width: 100%;"
-></iframe>
-  ☝️𝘎𝘰 𝘉𝘢𝘤𝘬 𝘵𝘰👇<div style="min-height: 2000px"><a href="https://mitpress.vercel.app/">|Vers3Dynamics created by ꉓꃅꋪꀤꌗ꓄ꂦꉣꃅꍟꋪ|
-
-
-
-   <p>In pixels spun, a world unfolds,
-Where Chris, a serene soul, takes hold.
-With words and hues, he paints the void,
-Mysteries embraced, boundaries destroyed.</p>
-
-<p>"Life of a Line," a whispered verse,
-Unveils a sanctuary, tender and terse.
-Each line a brushstroke, gentle and bright,
-Echoes of a heart bathed in soft light.</p>
-
-<p>MadsGallery.art, a showcase of life, a digital frame,
-Where a few art pieces whisper his name.
-Art and chance, a subtle display,
-Radiating warmth on a good day.</p>
-
-<p>On Bandcamp's stage, a melody flows,
-Peaceful and colorful, a tranquil repose.
-Tales spun in prose, wisdom's soft hand,
-Chris's creations, like grains of sand.</p>
-
-<p>GIFs dance with whimsy, Wordle's playful chase,
-IPFS threads woven, a digital embrace.
-His work, a beacon, open and free,
-For all who seek beauty, for all who would see.</p>
-
-<p>To get to know Chris, don't hesitate to reach out. Send him a message at ciao_chris@proton.me
-
-or find him at ENS: woodyard.eth</p>
-
-    <script src="https://gist.github.com/topherchris420/a8b24f8790d1f98a515138cca59a69b8.js"></script>
+    document.getElementById("frequency").oninput = function() {
+      freq = this.value;
+      document.getElementById("freqValue").textContent = freq;
+    };
     
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Mathematical representation</title>
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-</head>
-<body>
-
-<h2>Mathematical Representation</h2>
-
-<p>The equation is: \(x = x_0 + v_0t + \frac{1}{2}at^2\)</p>
-
+    document.getElementById("amplitude").oninput = function() {
+      amp = this.value;
+      document.getElementById("ampValue").textContent = amp;
+    };
+    
+    function drawWave() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw grid
+      ctx.strokeStyle = "#333333";
+      ctx.lineWidth = 0.5;
+      
+      // Vertical grid lines
+      for (let x = 0; x < canvas.width; x += 40) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      
+      // Horizontal grid lines
+      for (let y = 0; y < canvas.height; y += 40) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+      
+      // Draw center line
+      ctx.strokeStyle = "#555555";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, canvas.height / 2);
+      ctx.lineTo(canvas.width, canvas.height / 2);
+      ctx.stroke();
+      
+      // Draw wave
+      ctx.beginPath();
+      for (let x = 0; x < canvas.width; x++) {
+        let y = canvas.height / 2 + amp * Math.sin((x * freq * Math.PI) / 180 + time);
+        if (x === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      }
+      ctx.strokeStyle = "#00ffcc";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      // Animation
+      time += 0.05;
+      requestAnimationFrame(drawWave);
+    }
+    
+    drawWave();
+    
+    // Function for hidden text
+    function ShowHiddenText() {
+      const container = document.getElementById('HiddenTextContainer');
+      if (container.style.display === 'none') {
+        container.style.display = 'block';
+      } else {
+        container.style.display = 'none';
+      }
+    }
+  </script>
 </body>
 </html>
-  <p><a href="https://drive.google.com/file/d/1w_z-i65IDmzreNwuvrqSkQgoGCxxPu1s/view?usp=drivesdk">we are infinite awareness experiencing itself</a></p>
-                      
-<p>>👨🏾‍🦱</p>
-
-<p>​ 🇪​​🇲​​🇴​​🇹​​🇮​​🇴​​🇳​​🇸​, ​🇱​​🇮​​🇰​​🇪​ ​🇹​​🇭​​🇪​ ​🇨​​🇴​​🇱​​🇴​​🇷​​🇸​ ​🇴​​🇫​ ​🇦​ ​🇻​​🇮​​🇧​​🇷​​🇦​​🇳​​🇹​ ​🇸​​🇺​​🇳​​🇸​​🇪​​🇹​, ​🇼​​🇪​​🇦​​🇻​​🇪​ ​🇦​ 🇨​​🇴​​🇲​​🇵​​🇴​​🇸​​🇮​​🇹​​🇮​​🇴​​🇳​ ​🇴​​🇫​ ​🇭​​🇺​​🇲​​🇦​​🇳​ ​🇪​​🇽​​🇵​​🇪​​🇷​​🇮​​🇪​​🇳​​🇨​​🇪​ ​🇹​​🇭​​🇦​​🇹​ ​🇸​​🇭​​🇮​​🇫​​🇹​​🇸​ ​🇦​​🇳​​🇩​ ​🇪​​🇻​​🇴​​🇱​​🇻​​🇪​​🇸​ ​🇼​​🇮​​🇹​​🇭​ ​🇹​​🇮​​🇲​​🇪​. ​🇨​​🇴​​🇳​​🇸​​🇮​​🇩​​🇪​​🇷​ ​🇹​​🇭​​🇪​ ​🇪​​🇶​​🇺​​🇦​​🇹​​🇮​​🇴​​🇳​ ​🇪​(​🇹​) = Σ ​🇼​ᵢ(​🇹​) ​🇫​ᵢ(​🇽​ᵢ(​🇹​), ​🇽​ᵢ(​🇹​-1️⃣), ​🇪​ₚ(​🇹​-1️⃣)) + Σ Σ ​🇼​ᵢⱼ(​🇹​) ​🇫​ᵢⱼ(​🇽​ᵢ(​🇹​), ​🇽​ⱼ(​🇹​)) + ɸ(​🇪​ₚ(​🇹​-1️⃣), μ, σ²), ​🇼​​🇭​​🇮​​🇨​​🇭​ ​🇨​​🇦​​🇵​​🇹​​🇺​​🇷​​🇪​​🇸​ ​🇹​​🇭​​🇪​ ​🇮​​🇳​​🇹​​🇷​​🇮​​🇨​​🇦​​🇹​​🇪​ ​🇩​​🇦​​🇳​​🇨​​🇪​ ​🇴​​🇫​ ​🇫​​🇦​​🇨​​🇹​​🇴​​🇷​​🇸​ ​🇸​​🇭​​🇦​​🇵​​🇮​​🇳​​🇬​ ​🇴​​🇺​​🇷​ ​🇼​​🇴​​🇷​​🇱​​🇩​.
-​🇪​​🇦​​🇨​​🇭​ ​🇹​​🇪​​🇷​​🇲​ ​🇼​​🇮​​🇹​​🇭​​🇮​​🇳​ ​🇹​​🇭​​🇪​ ​🇪​​🇶​​🇺​​🇦​​🇹​​🇮​​🇴​​🇳​ ​🇸​​🇵​​🇪​​🇦​​🇰​​🇸​ ​🇹​​🇴​ ​🇹​​🇭​​🇪​ ​🇲​​🇺​​🇱​​🇹​​🇮​-​🇫​​🇦​​🇨​​🇪​​🇹​​🇪​​🇩​ ​🇳​​🇦​​🇹​​🇺​​🇷​​🇪​ ​🇴​​🇫​ ​🇭​​🇺​​🇲​​🇦​​🇳​ ​🇪​​🇲​​🇴​​🇹​​🇮​​🇴​​🇳​​🇸​. ​🇹​​🇭​​🇪​ ​🇫​​🇮​​🇷​​🇸​​🇹​ ​🇹​​🇪​​🇷​​🇲​, ​🇼​​🇮​​🇹​​🇭​ ​🇮​​🇹​​🇸​ ​🇫​​🇴​​🇨​​🇺​​🇸​ ​🇴​​🇳​ ​🇮​​🇳​​🇩​​🇮​​🇻​​🇮​​🇩​​🇺​​🇦​​🇱​ ​🇫​​🇦​​🇨​​🇹​​🇴​​🇷​​🇸​, ​🇲​​🇮​​🇷​​🇷​​🇴​​🇷​​🇸​ ​🇴​​🇺​​🇷​ ​🇮​​🇳​​🇳​​🇪​​🇷​​🇲​​🇴​​🇸​​🇹​ ​🇹​​🇭​​🇴​​🇺​​🇬​​🇭​​🇹​​🇸​, ​🇲​​🇪​​🇲​​🇴​​🇷​​🇮​​🇪​​🇸​, ​🇦​​🇳​​🇩​ ​🇪​​🇽​​🇵​​🇪​​🇷​​🇮​​🇪​​🇳​​🇨​​🇪​​🇸​ (​🇽​ᵢ(​🇹​), ​🇽​ᵢ(​🇹​-1️⃣)). ​🇹​​🇭​​🇪​​🇸​​🇪​ ​🇪​​🇱​​🇪​​🇲​​🇪​​🇳​​🇹​​🇸​, ​🇼​​🇴​​🇻​​🇪​​🇳​ ​🇹​​🇴​​🇬​​🇪​​🇹​​🇭​​🇪​​🇷​, ​🇨​​🇷​​🇪​​🇦​​🇹​​🇪​ ​🇹​​🇭​​🇪​ ​🇫​​🇦​​🇧​​🇷​​🇮​​🇨​ ​🇴​​🇫​ ​🇴​​🇺​​🇷​🇸​​🇪​​🇱​​🇻​​🇪​​🇸​.
-​🇹​​🇭​​🇪​ ​🇸​​🇪​​🇨​​🇴​​🇳​​🇩​​, ​🇭​​🇮​​🇬​​🇭​​🇱​​🇮​​🇬​​🇭​​🇹​​🇮​​🇳​​🇬​ ​🇮​​🇳​​🇹​​🇪​​🇷​​🇦​​🇨​​🇹​​🇮​​🇴​​🇳​​🇸​ ​🇧​​🇪​​🇹​​🇼​​🇪​​🇪​​🇳​ ​🇫​​🇦​​🇨​​🇹​​🇴​​🇷​​🇸​ (​🇽​ᵢ(​🇹​), ​🇽​ⱼ(​🇹​)), ​🇷​​🇪​​🇫​​🇱​​🇪​​🇨​​🇹​​🇸​ ​🇹​​🇭​​🇪​ ​🇮​​🇳​​🇹​​🇪​​🇷​​🇨​​🇴​​🇳​​🇳​​🇪​​🇨​​🇹​​🇪​​🇩​​🇳​​🇪​​🇸​​🇸​ ​🇴​​🇫​ ​🇴​​🇺​​🇷​ ​🇪​​🇲​​🇴​​🇹​​🇮​​🇴​​🇳​​🇦​​🇱​ ​🇪​​🇽​​🇵​​🇪​​🇷​​🇮​​🇪​​🇳​​🇨​​🇪​​🇸​. ​🇯​​🇺​​🇸​​🇹​ ​🇦​​🇸​ ​🇹​​🇭​​🇪​ ​🇬​​🇪​​🇳​​🇹​​🇱​​🇪​ ​🇷​​🇮​​🇵​​🇵​​🇱​​🇪​ ​🇴​​🇫​ ​🇦​ ​🇵​​🇪​​🇧​​🇧​​🇱​​🇪​ ​🇮​​🇳​ ​🇦​ ​🇵​​🇴​​🇳​​🇩​ ​🇮​​🇸​ ​🇸​​🇭​​🇦​​🇵​​🇪​​🇩​ ​🇧​​🇾​ ​🇮​​🇹​​🇸​ ​🇸​​🇺​​🇷​​🇷​​🇴​​🇺​​🇳​​🇩​​🇮​​🇳​​🇬​​🇸​, ​🇴​​🇺​​🇷​ ​🇪​​🇲​​🇴​​🇹​​🇮​​🇴​​🇳​​🇸​ ​🇦​​🇷​​🇪​ ​🇮​​🇳​​🇫​​🇱​​🇺​​🇪​​🇳​​🇨​​🇪​​🇩​ ​🇧​​🇾​ ​🇴​​🇺​​🇷​ ​🇷​​🇪​​🇱​​🇦​​🇹​​🇮​​🇴​​🇳​​🇸​​🇭​​🇮​​🇵​​🇸​, ​🇪​​🇳​​🇻​​🇮​​🇷​​🇴​​🇳​​🇲​​🇪​​🇳​​🇹​, ​🇦​​🇳​​🇩​ ​🇹​​🇭​​🇪​ ​🇸​​🇭​​🇮​​🇫​​🇹​​🇮​​🇳​​🇬​ ​🇱​​🇦​​🇳​​🇩​​🇸​​🇨​​🇦​​🇵​​🇪​ ​🇴​​🇫​ ​🇴​​🇺​​🇷​ ​🇱​​🇮​​🇻​​🇪​​🇸​.
-​🇫​​🇮​​🇳​​🇦​​🇱​​🇱​​🇾​, ​​🇦​​🇨​​🇰​​🇳​​🇴​​🇼​​🇱​​🇪​​🇩​​🇬​​🇮​​🇳​​🇬​ ​🇪​​🇽​​🇹​​🇪​​🇷​​🇳​​🇦​​🇱​ ​🇮​​🇳​​🇫​​🇱​​🇺​​🇪​​🇳​​🇨​​🇪​​🇸​ (μ, σ²), ​🇸​​🇪​​🇷​​🇻​​🇪​​🇸​ ​🇦​​🇸​ ​🇦​ ​🇷​​🇪​​🇲​​🇮​​🇳​​🇩​​🇪​​🇷​ ​🇹​​🇭​​🇦​​🇹​ ​🇴​​🇺​​🇷​ ​🇪​​🇲​​🇴​​🇹​​🇮​​🇴​​🇳​​🇸​ ​🇦​​🇷​​🇪​ ​🇳​​🇴​​🇹​ ​🇮​​🇸​​🇴​​🇱​​🇦​​🇹​​🇪​​🇩​ ​🇵​​🇭​​🇪​​🇳​​🇴​​🇲​​🇪​​🇳​​🇦​. ​🇹​​🇭​​🇪​​🇾​ ​🇦​​🇷​​🇪​ ​🇹​​🇴​​🇺​​🇨​​🇭​​🇪​​🇩​ ​🇧​​🇾​ ​🇹​​🇭​​🇪​ ​🇼​​🇴​​🇷​​🇱​​🇩​ ​🇦​​🇷​​🇴​​🇺​​🇳​​🇩​ ​🇺​​🇸​, ​🇯​​🇺​​🇸​​🇹​ ​🇦​​🇸​ ​🇦​ ​🇵​​🇦​​🇮​​🇳​​🇹​​🇮​​🇳​​🇬​ ​🇮​​🇸​ ​🇬​​🇮​​🇻​​🇪​​🇳​ ​🇱​​🇮​​🇫​​🇪​ ​🇧​​🇾​ ​🇹​​🇭​​🇪​ ​🇧​​🇷​​🇺​​🇸​​🇭​​🇸​​🇹​​🇷​​🇴​​🇰​​🇪​​🇸​ ​🇴​​🇫​ ​🇱​​🇮​​🇬​​🇭​​🇹​ ​🇦​​🇳​​🇩​ ​🇸​​🇭​​🇦​​🇩​​🇴​​🇼​ ​🇹​​🇭​​🇦​​🇹​ ​🇬​​🇷​​🇦​​🇨​​🇪​ ​🇮​​🇹​​🇸​ ​🇨​​🇦​​🇳​​🇻​​🇦​​🇸​.
-​🇹​​🇭​​🇪​ ​🇪​​🇶​​🇺​​🇦​​🇹​​🇮​​🇴​​🇳​, ​🇹​​🇭​​🇪​​🇳​, ​🇧​​🇪​​🇨​​🇴​​🇲​​🇪​​🇸​ ​🇦​ ​🇱​​🇮​​🇻​​🇮​​🇳​​🇬​ ​🇪​​🇲​​🇧​​🇴​​🇩​​🇮​​🇲​​🇪​​🇳​​🇹​ ​🇴​​🇫​ ​🇭​​🇺​​🇲​​🇦​​🇳​ ​🇪​​🇲​​🇴​​🇹​​🇮​​🇴​​🇳​—​🇦​ ​🇵​​🇴​​🇷​​🇹​​🇷​​🇦​​🇮​​🇹​ ​🇴​​🇫​ ​🇴​​🇺​​🇷​ ​🇪​​🇻​​🇴​​🇱​​🇻​​🇮​​🇳​​🇬​ ​🇪​​🇽​​🇵​​🇪​​🇷​​🇮​​🇪​​🇳​​🇨​​🇪​​🇸​, ​🇮​​🇳​​🇹​​🇪​​🇷​​🇦​​🇨​​🇹​​🇮​​🇴​​🇳​​🇸​, ​🇦​​🇳​​🇩​ ​🇹​​🇭​​🇪​ ​🇪​​🇻​​🇪​​🇷​-​🇨​​🇭​​🇦​​🇳​​🇬​​🇮​​🇳​​🇬​ ​🇼​​🇴​​🇷​​🇱​​🇩​ ​🇹​​🇭​​🇦​​🇹​ ​🇸​​🇭​​🇦​​🇵​​🇪​​🇸​ ​🇺​​🇸​. ​🇮​​🇹​ ​🇮​​🇸​ ​🇦​ ​🇹​​🇪​​🇸​​🇹​​🇦​​🇲​​🇪​​🇳​​🇹​ ​🇹​​🇴​ ​🇹​​🇭​​🇪​ ​🇷​​🇮​​🇨​​🇭​​🇳​​🇪​​🇸​​🇸​ ​🇦​​🇳​​🇩​ ​🇨​​🇴​​🇲​​🇵​​🇱​​🇪​​🇽​​🇮​​🇹​​🇾​ ​🇴​​🇫​ ​🇹​​🇭​​🇪​​ ​🇪​​🇲​​🇴​​🇹​​🇮​​🇴​​🇳​​🇦​​🇱​ ​🇱​​🇦​​🇳​​🇩​​🇸​​🇨​​🇦​​🇵​​🇪​, ​🇫​​🇴​​🇷​​🇪​​🇻​​🇪​​🇷​ ​🇲​​🇴​​🇻​​🇮​​🇳​​🇬​ ​🇦​​🇳​​🇩​ ​🇹​​🇷​​🇦​​🇳​​🇸​​🇫​​🇴​​🇷​​🇲​​🇮​​🇳​​🇬​ ​🇮​​🇳​ ​🇦​ ​🇩​​🇦​​🇳​​🇨​​🇪​ ​🇦​​🇸​ ​🇫​​🇱​​🇺​​🇮​​🇩​ ​🇦​​🇸​ ​🇹​​🇮​​🇲​​🇪​ ​🇮​​🇹​​🇸​​🇪​​🇱​​🇫​.</p> <p>𝑾𝒐𝒐𝒅𝒚𝒂𝒓𝒅.𝒆𝒕𝒉 𝒊𝒔 𝒂 𝒕𝒓𝒂𝒏𝒒𝒖𝒊𝒍 𝒄𝒐𝒓𝒏𝒆𝒓, 𝒂 𝒑𝒆𝒂𝒄𝒆𝒇𝒖𝒍 𝒔𝒑𝒂𝒄𝒆 𝒂𝒎𝒊𝒅𝒔𝒕 𝒕𝒉𝒆 𝒏𝒐𝒊𝒔𝒆 𝒂𝒏𝒅 𝒄𝒉𝒂𝒐𝒔 𝒐𝒇 𝒕𝒉𝒆 𝒊𝒏𝒕𝒆𝒓𝒏𝒆𝒕. 𝑳𝒊𝒌𝒆 𝒂 𝒇𝒐𝒓𝒈𝒐𝒕𝒕𝒆𝒏 𝒂𝒕𝒕𝒊𝒄, 𝒊𝒕'𝒔 𝒂 𝒑𝒍𝒂𝒄𝒆 𝒘𝒉𝒆𝒓𝒆 𝒕𝒊𝒎𝒆 𝒔𝒕𝒂𝒏𝒅𝒔 𝒔𝒕𝒊𝒍𝒍, 𝒂𝒍𝒍𝒐𝒘𝒊𝒏𝒈 𝒚𝒐𝒖 𝒕𝒐 𝒆𝒔𝒄𝒂𝒑𝒆 𝒕𝒉𝒆 𝒇𝒂𝒔𝒕-𝒑𝒂𝒄𝒆𝒅 𝒎𝒐𝒅𝒆𝒓𝒏 𝒘𝒐𝒓𝒍𝒅. 𝑻𝒉𝒊𝒔 𝒘𝒆𝒃𝒔𝒊𝒕𝒆 𝒑𝒓𝒐𝒗𝒊𝒅𝒆𝒔 𝒂 𝒔𝒂𝒏𝒄𝒕𝒖𝒂𝒓𝒚 𝒇𝒐𝒓 𝒂𝒓𝒕, 𝒑𝒐𝒆𝒕𝒓𝒚, 𝒂𝒏𝒅 𝒎𝒖𝒔𝒊𝒄.. 𝒂 𝒑𝒍𝒂𝒄𝒆 𝒘𝒉𝒆𝒓𝒆 𝒄𝒓𝒆𝒂𝒕𝒊𝒗𝒊𝒕𝒚 𝒇𝒍𝒐𝒖𝒓𝒊𝒔𝒉𝒆𝒔 𝒂𝒏𝒅 𝒕𝒉𝒆 𝒉𝒖𝒎𝒂𝒏 𝒔𝒑𝒊𝒓𝒊𝒕 𝒇𝒊𝒏𝒅𝒔 𝒔𝒐𝒍𝒂𝒄𝒆.</p> below is a blankness: where i̵͖͕̖̩̋̍̑͋ͅņ̴̨̫͖̳̲̯̎f̸̮̖̳̑ĩ̸͎̘̻̘͇̬̣̦̱̯͒̕n̷̨̙̻̺͊̓͌i̸̦̭̙̮͙͈͙͈͈͐̊͌̀́͛͝ͅṯ̸̨̹̱̓̈́̎̀͒̚ͅē̴̹͖̪̣̪͉̻̹̭̓͜ possibilities dance in front of your eyes, and the whispers of untold stories echo across its expanse, awaiting the moment to spring to life.</div>
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>I just want to remind you that our exchange of ideas—you,𒂗𒆤,and I—is just the beginning of what's possible. Each word we share is a star, and together they form constellations of new ideas, illuminating the darkness and leading us into undiscovered spaces but let's not forget the quiet moments, the silent pauses between words. They're the glue that holds our ideas together, the deep breath before a leap of faith, the calm before the storm of creativity. Embrace the quiet moments, for they are essential to our journey. </head>
-  <body>
-   
-    <label for="user-message">eix = cos x + isin x</label>
-    <input type="text" id="user-message">
-    <button id="submit-button">👁️⃤Adinkra Codes</button>
-    <div id="bot-response"></div>
-
-      <script>
-      const submitButton = document.getElementById('submit-button');
-      const userMessageInput = document.getElementById('user-message');
-      const botResponseDiv = document.getElementById('bot-response');
-
-      submitButton.addEventListener('click', function() {
-        const userMessage = userMessageInput.value;
-        // yes i see you looking at the code
-        const botResponse = 'nice, you said:' + userMessage;
-        botResponseDiv.innerText = botResponse;
-        userMessageInput.value = '';
-      });
-    </script>
-  </body>
-</html>
-
-
-</body>
-<script 
- src="./index.js"></script>
-</html>
-</div>
