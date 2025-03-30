@@ -8,7 +8,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ƨɔimɒnyᗡƐƨɿɘV</title>
+  <title>ƨɔimɒnyᗡƐƨɿɘV - Scalar Explorer</title>
   <style>
     :root {
       --primary-color: #00ffcc;
@@ -254,7 +254,7 @@
     
     #HiddenTextContainer {
       background-color: rgba(0, 0, 0, 0.8);
-      padding: 20px;
+      padding: 0;
       border-radius: 8px;
       border-left: 3px solid var(--primary-color);
       text-align: left;
@@ -269,25 +269,6 @@
     #HiddenTextContainer.visible {
       max-height: 500px;
       padding: 20px;
-    }
-    
-    .particle-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: -1;
-    }
-    
-    .particle {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      border-radius: 50%;
-      background-color: var(--primary-color);
-      opacity: 0.3;
     }
     
     .research-paper {
@@ -316,34 +297,6 @@
       font-size: 0.9rem;
       opacity: 0.8;
       margin-bottom: 15px;
-    }
-    
-    .interactive-demo {
-      margin: 40px auto;
-      text-align: center;
-    }
-    
-    .mode-selector {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    
-    .mode-btn {
-      background-color: rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--text-color);
-      padding: 8px 15px;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 0.8rem;
-    }
-    
-    .mode-btn:hover, .mode-btn.active {
-      background-color: var(--primary-color);
-      color: black;
     }
     
     .light-theme {
@@ -430,7 +383,6 @@
   </style>
 </head>
 <body>
-  <div class="particle-container" id="particleContainer"></div>
   <button class="theme-toggle" id="themeToggle">
     <div class="icon"></div>
     <span>Loïs Mailou Jones</span>
@@ -444,12 +396,6 @@
   <canvas id="waveCanvas" width="800" height="400"></canvas>
   
   <div class="controls">
-    <div class="mode-selector">
-      <button class="mode-btn active" data-mode="standard">Standard</button>
-      <button class="mode-btn" data-mode="quantum">Quantum</button>
-      <button class="mode-btn" data-mode="harmonic">Harmonic</button>
-    </div>
-    
     <div class="slider-container">
       <div class="slider-label">Frequency</div>
       <input type="range" id="frequency" class="slider" min="1" max="50" value="1">
@@ -462,20 +408,8 @@
       <div class="slider-value" id="ampValue">50</div>
     </div>
     
-    <div class="slider-container">
-      <div class="slider-label">Phase</div>
-      <input type="range" id="phase" class="slider" min="0" max="100" value="0">
-      <div class="slider-value" id="phaseValue">0</div>
-    </div>
-    
     <p class="equation">eiθ = cos θ + i sin θ</p>
   </div>
-
-  <section class="interactive-demo">
-    <h2>Wave Interference Patterns</h2>
-    <p>Experience the fascinating world of quantum wave interference</p>
-    <canvas id="interferenceCanvas" width="800" height="300"></canvas>
-  </section>
 
   <section>
     <iframe width="560" height="315" src="https://app.heygen.com/embeds/58ec4c3d17da409d82a20935d74d5b75" title="HeyGen video player" frameborder="0" allow="encrypted-media; fullscreen;" allowfullscreen></iframe>
@@ -490,4 +424,126 @@
     <div id="HiddenTextContainer">
       Hi, in the quiet space where my dreams meet your reality, I, Christopher, leave you a secret: You are the master sculptor of your own destiny. Every heartbeat you share with this universe is a chance to craft something entirely new. Listen closely to the silent language of your soul, for it speaks of infinite possibility. I invite you, in this very moment, to embrace your power to transform the world around you—and in doing so, ignite a light that no darkness can ever dim.
       <br><br>
-      In your eyes, I see the promise of every sunrise and the gentle wisdom of the twilight—each moment with you turns my wandering heart into a home, where even the wild
+      In your eyes, I see the promise of every sunrise and the gentle wisdom of the twilight—each moment with you turns my wandering heart into a home, where even the wildest dreams find their peaceful song.
+    </div>
+  </section>
+
+  <section>
+    <iframe src="https://vers3dynamics.substack.com/embed" width="480" height="320" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe>
+  </section>
+
+  <section>
+    <div class="research-paper">
+      <h3 class="paper-title">Quantum Teleportation: The Dynamic Implications for Object Properties</h3>
+      <p class="paper-abstract">This paper explores the fundamental implications of quantum teleportation on our understanding of object properties and the mutable foundations of reality. Through a series of theoretical frameworks and mathematical models, we propose a new theory of ontological fluidity.</p>
+      <a href="https://vers3dynamics.io/an-essay-towards-a-new-theory-of-ontological-fluidity-quantum-teleportation-and-the-mutable-foundations-of-reality">Read the full paper →</a>
+    </div>
+  </section>
+
+  <div class="footer">
+    <p>"The wonderful thing about being an artist is that there is no end to creative expression. Painting is my life; my life is painting," - Loïs Mailou Jones</p>
+    <p>© 2025 ƨɔimɒnyᗡƐƨɿɘV - Exploring the quantum foundations of reality</p>
+  </div>
+
+  <script>
+    // Theme toggling
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', function() {
+      document.body.classList.toggle('light-theme');
+      if (document.body.classList.contains('light-theme')) {
+        this.querySelector('span').textContent = 'Dark Mode';
+      } else {
+        this.querySelector('span').textContent = 'Loïs Mailou Jones';
+      }
+    });
+
+    // Whispers functionality
+    const whisperTrigger = document.getElementById('whisperTrigger');
+    const hiddenTextContainer = document.getElementById('HiddenTextContainer');
+    
+    whisperTrigger.addEventListener('click', function() {
+      hiddenTextContainer.classList.toggle('visible');
+    });
+
+    // Scalar Explorer wave visualization
+    const canvas = document.getElementById("waveCanvas");
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      console.error("Canvas context not supported");
+      return;
+    }
+    let freq = 1, amp = 50;
+    let time = 0;
+    
+    document.getElementById("frequency").oninput = function() {
+      freq = this.value;
+      document.getElementById("freqValue").textContent = freq;
+    };
+    
+    document.getElementById("amplitude").oninput = function() {
+      amp = this.value;
+      document.getElementById("ampValue").textContent = amp;
+    };
+    
+    function drawWave() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw grid
+      ctx.strokeStyle = document.body.classList.contains('light-theme') ? "#dddddd" : "#333333";
+      ctx.lineWidth = 0.5;
+      
+      for (let x = 0; x < canvas.width; x += 40) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      
+      for (let y = 0; y < canvas.height; y += 40) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+      
+      // Draw center line
+      ctx.strokeStyle = document.body.classList.contains('light-theme') ? "#aaaaaa" : "#555555";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, canvas.height / 2);
+      ctx.lineTo(canvas.width, canvas.height / 2);
+      ctx.stroke();
+      
+      // Draw wave
+      ctx.beginPath();
+      const primaryColor = getComputedStyle(document.body).getPropertyValue('--primary-color');
+      for (let x = 0; x < canvas.width; x++) {
+        let y = canvas.height / 2 + amp * Math.sin((x * freq * Math.PI) / 180 + time);
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = primaryColor;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      time += 0.05;
+      requestAnimationFrame(drawWave);
+    }
+    
+    drawWave();
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+      if (window.innerWidth < 800) {
+        canvas.width = Math.max(300, window.innerWidth - 40);
+      } else {
+        canvas.width = 800;
+      }
+    });
+    
+    if (window.innerWidth < 800) {
+      canvas.width = Math.max(300, window.innerWidth - 40);
+    }
+  </script>
+</body>
+</html>
