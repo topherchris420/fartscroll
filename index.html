@@ -4,265 +4,166 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ƨɔimɒnyᗡƐƨɿɘV</title>
+  <!-- ****** Updated Title ****** -->
+  <title>Shape Waves & Uncover Scalar Secrets</title>
+  <!-- ****** End Updated Title ****** -->
   <style>
-    :root {
-      --primary-color: #00ffcc;
-      --secondary-color: #9900ff;
-      --background-color: #000;
-      --text-color: #fff;
-      --panel-bg: rgba(30, 30, 30, 0.7);
-    }
-    
     body {
       font-family: 'Montserrat', sans-serif;
       text-align: center;
-      background-color: var(--background-color);
-      color: var(--text-color);
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
+      background-color: black;
+      color: white;
+      transition: background-color 0.5s;
     }
-    
     .header {
       margin-top: 20px;
       margin-bottom: 30px;
-      padding: 30px 20px;
     }
-    
-    .header h1 {
-      font-weight: 900;
-      font-size: 3rem;
-      margin-bottom: 0.5rem;
-      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-fill-color: transparent;
-    }
-    
-    .header p {
-      font-weight: 300;
-      font-size: 1.2rem;
-      opacity: 0.9;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    
     canvas {
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid white;
       margin: 20px auto;
       display: block;
       max-width: 100%;
-      background-color: #111; /* Added to make canvas visible if empty */
     }
-    
     .controls {
       margin: 20px auto;
       max-width: 600px;
-      padding: 25px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      background-color: var(--panel-bg);
+      padding: 20px;
+      border: 1px solid #333;
+      border-radius: 10px;
+      background-color: rgba(30, 30, 30, 0.7);
     }
-    
-    .slider-container {
-      display: flex;
-      align-items: center;
-      margin: 15px 0;
-    }
-    
-    .slider-label {
-      width: 120px;
-      text-align: left;
-      font-size: 0.9rem;
-    }
-    
     .slider {
-      -webkit-appearance: none;
       width: 80%;
-      height: 6px;
-      border-radius: 3px;
-      background: linear-gradient(to right, #333, var(--primary-color));
-      outline: none;
+      max-width: 300px;
+      margin: 10px;
     }
-    
-    .slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: var(--primary-color);
-      cursor: pointer;
-    }
-    
-    .slider-value {
-      width: 40px;
-      text-align: right;
-      font-family: 'Space Mono', monospace;
-      color: var(--primary-color);
-    }
-    
-    .equation {
-      font-style: italic;
-      margin: 25px 0 10px;
-      font-size: 1.3rem;
-      opacity: 0.8;
-    }
-    
     section {
-      margin: 60px auto;
+      margin: 40px auto;
       max-width: 800px;
       padding: 0 20px;
     }
-    
-    .theme-toggle {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background-color: rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: var(--text-color);
-      padding: 10px 15px;
-      border-radius: 30px;
+    #changeColorBtn {
+      background-color: #444;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
       cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 10px;
     }
-    
-    .theme-toggle .icon {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: var(--primary-color);
-      display: inline-block;
-      vertical-align: middle;
-      margin-right: 8px;
+    #changeColorBtn:hover {
+      background-color: #666;
     }
-    
-    .light-theme {
-      --background-color: #f5f5f7;
-      --text-color: #222;
-      --panel-bg: rgba(255, 255, 255, 0.8);
-      --primary-color: #00aa88;
-      --secondary-color: #6600cc;
+    iframe {
+      max-width: 100%;
     }
-    
-    .light-theme canvas {
-      border-color: rgba(0, 0, 0, 0.1);
-      background-color: #eee;
+    a {
+      color: #00ffcc;
+      text-decoration: none;
     }
-    
-    .footer {
-      margin: 60px auto 30px;
-      padding: 20px;
-      font-size: 0.8rem;
-      opacity: 0.5;
-      max-width: 600px;
+    a:hover {
+      text-decoration: underline;
     }
-    
-    @media (max-width: 768px) {
-      .slider-container {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .slider {
-        width: 100%;
-        margin: 10px 0;
-      }
-      .slider-value {
-        width: 100%;
-        text-align: center;
-      }
+    .equation {
+      font-style: italic;
+      margin: 20px 0;
     }
   </style>
 </head>
 <body>
-  <button class="theme-toggle" id="themeToggle">
-    <div class="icon"></div>
-    <span>Loïs Mailou Jones</span>
-  </button>
+  <button id="changeColorBtn">"The wonderful thing about being an artist is that there is no end to creative expression. Painting is my life; my life is painting,"</button>
 
   <div class="header">
-    <h1>ƨɔimɒnyᗡƐƨɿɘV</h1>
+    <!-- You might want to update the H1 to match the title's theme too, but keeping original for now -->
+    <h1>ƨɔimɒnyᗡƐƨɿɘV - Scalar Explorer</h1>
     <p>Visualize and explore wave patterns in the quantum realm</p>
   </div>
 
   <canvas id="waveCanvas" width="800" height="400"></canvas>
-  
+
   <div class="controls">
-    <div class="slider-container">
-      <div class="slider-label">Frequency</div>
-      <input type="range" id="frequency" class="slider" min="1" max="50" value="1">
-      <div class="slider-value" id="freqValue">1</div>
-    </div>
-    
-    <div class="slider-container">
-      <div class="slider-label">Amplitude</div>
-      <input type="range" id="amplitude" class="slider" min="10" max="100" value="50">
-      <div class="slider-value" id="ampValue">50</div>
-    </div>
-    
+    <label>Frequency: <span id="freqValue">1</span></label>
+    <input type="range" id="frequency" class="slider" min="1" max="50" value="1">
+    <br>
+    <label>Amplitude: <span id="ampValue">50</span></label>
+    <input type="range" id="amplitude" class="slider" min="10" max="100" value="50">
     <p class="equation">eiθ = cos θ + i sin θ</p>
   </div>
 
-  <div class="footer">
-    <p>"The wonderful thing about being an artist is that there is no end to creative expression. Painting is my life; my life is painting," - Loïs Mailou Jones</p>
-    <p>© 2025 ƨɔimɒnyᗡƐƨɿɘV - Exploring the quantum foundations of reality</p>
-  </div>
+  <section>
+    <p><iframe width="560" height="315" src="https://app.heygen.com/embeds/58ec4c3d17da409d82a20935d74d5b75" title="HeyGen video player" frameborder="0" allow="encrypted-media; fullscreen;" allowfullscreen></iframe></p>
+    <p><a href="https://woodyard.streamlit.app/">🪶</a></p>
+    <div style="position: relative; overflow: hidden; aspect-ratio: 1920/1080">
+      <iframe src="https://share.synthesia.io/embeds/videos/2016838e-6dc0-426f-b362-daad40add0f4" loading="lazy" title="Synthesia video player - Vers3Dynamics" allow="encrypted-media; fullscreen;" style="position: absolute; width: 50%; height: 50%; top: 0; left: 0; border: none; padding: 0; margin: 0; overflow:hidden;"></iframe>
+    </div>
+  </section>
+
+  <section>
+    <p><span onclick="ShowHiddenText();" style="cursor: pointer;">𝖂𝖍𝖎𝖘𝖕𝖊𝖗𝖘 𝖔𝖋 𝖙𝖍𝖊 𝕾𝖔𝖚𝖑</span></p> <!-- Added cursor:pointer for better UX -->
+    <div id="HiddenTextContainer" style="display: none;">
+      hi, in the quiet space where my dreams meet your reality, I, Christopher , leave you a secret: You are the master sculptor of your own destiny. Every heartbeat you share with this universe is a chance to craft something entirely new. Listen closely to the silent language of your soul, for it speaks of infinite possibility. I invite you, in this very moment, to embrace your power to transform the world around you—and in doing so, ignite a light that no darkness can ever dim.
+        In your eyes, I see the promise of every sunrise and the gentle wisdom of the twilight—each moment with you turns my wandering heart into a home, where even the wildest dreams find their peaceful song.</div>
+  </section>
+
+  <section>
+    <p><iframe src="https://vers3dynamics.substack.com/embed" width="480" height="320" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe></p>
+  </section>
+
+  <section>
+    <p>self-published research paper "Quantum Teleportation: The Dynamic Implications for Object Properties."<a href="https://vers3dynamics.io/an-essay-towards-a-new-theory-of-ontological-fluidity-quantum-teleportation-and-the-mutable-foundations-of-reality">Read the full story</a></p>
+  </section>
 
   <script>
-    // Theme toggling
-    const themeToggle = document.getElementById('themeToggle');
-    themeToggle.addEventListener('click', function() {
-      document.body.classList.toggle('light-theme');
-      this.querySelector('span').textContent = document.body.classList.contains('light-theme') ? 'Dark Mode' : 'Loïs Mailou Jones';
+    // Original light switch functionality (keeping as is, though the text might feel disconnected now)
+    document.getElementById('changeColorBtn').addEventListener('click', function() {
+      document.body.style.backgroundColor = 'black'; // It's already black, maybe toggle? See note below
+      this.textContent = 'Loïs Mailou Jones';
+      // Consider toggling background or having a different effect:
+      // Example toggle:
+      // if (document.body.style.backgroundColor === 'black') {
+      //   document.body.style.backgroundColor = '#222'; // Slightly lighter
+      // } else {
+      //   document.body.style.backgroundColor = 'black';
+      // }
     });
 
-    // Wave visualization
+    // Scalar Explorer wave visualization
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
-    
-    if (!ctx) {
-      console.error("Failed to get 2D context for canvas");
-      document.body.innerHTML += "<p style='color: red;'>Error: Canvas not supported in this browser.</p>";
-      return;
-    }
-
     let freq = 1, amp = 50;
     let time = 0;
 
-    // Slider controls
-    const freqSlider = document.getElementById("frequency");
-    const ampSlider = document.getElementById("amplitude");
-    const freqValue = document.getElementById("freqValue");
-    const ampValue = document.getElementById("ampValue");
-
-    freqSlider.oninput = function() {
-      freq = parseFloat(this.value);
-      freqValue.textContent = freq;
+    document.getElementById("frequency").oninput = function() {
+      freq = this.value;
+      document.getElementById("freqValue").textContent = freq;
     };
-    
-    ampSlider.oninput = function() {
-      amp = parseFloat(this.value);
-      ampValue.textContent = amp;
+
+    document.getElementById("amplitude").oninput = function() {
+      amp = this.value;
+      document.getElementById("ampValue").textContent = amp;
     };
 
     function drawWave() {
-      // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Draw grid
-      ctx.strokeStyle = document.body.classList.contains('light-theme') ? "#dddddd" : "#333333";
+      ctx.strokeStyle = "#333333";
       ctx.lineWidth = 0.5;
+
+      // Vertical grid lines
       for (let x = 0; x < canvas.width; x += 40) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, canvas.height);
         ctx.stroke();
       }
+
+      // Horizontal grid lines
       for (let y = 0; y < canvas.height; y += 40) {
         ctx.beginPath();
         ctx.moveTo(0, y);
@@ -271,7 +172,7 @@
       }
 
       // Draw center line
-      ctx.strokeStyle = document.body.classList.contains('light-theme') ? "#aaaaaa" : "#555555";
+      ctx.strokeStyle = "#555555";
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(0, canvas.height / 2);
@@ -280,37 +181,35 @@
 
       // Draw wave
       ctx.beginPath();
-      const primaryColor = getComputedStyle(document.body).getPropertyValue('--primary-color').trim();
-      ctx.strokeStyle = primaryColor;
-      ctx.lineWidth = 2;
-
       for (let x = 0; x < canvas.width; x++) {
-        let y = canvas.height / 2 + amp * Math.sin((x * freq * Math.PI) / 180 + time);
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+        // Use a smaller step for smoother waves if needed, e.g., x += 0.5
+        let y = canvas.height / 2 + amp * Math.sin((x * freq * 0.05) + time); // Adjusted frequency scaling for better visualization range
+        if (x === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
       }
+      ctx.strokeStyle = "#00ffcc"; // Vibrant color
+      ctx.lineWidth = 2;
       ctx.stroke();
 
       // Animation
-      time += 0.05;
+      time += 0.05; // Controls speed of animation
       requestAnimationFrame(drawWave);
     }
 
-    // Start animation
     drawWave();
 
-    // Responsive canvas
-    function resizeCanvas() {
-      if (window.innerWidth < 800) {
-        canvas.width = Math.max(300, window.innerWidth - 40);
+    // Function for hidden text
+    function ShowHiddenText() {
+      const container = document.getElementById('HiddenTextContainer');
+      if (container.style.display === 'none' || container.style.display === '') {
+        container.style.display = 'block';
       } else {
-        canvas.width = 800;
+        container.style.display = 'none';
       }
-      canvas.height = 400; // Maintain height
     }
-
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas(); // Initial sizing
   </script>
 </body>
 </html>
