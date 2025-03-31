@@ -7,39 +7,52 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- ****** Updated Title ****** -->
-  <title>Shape Waves & Uncover Scalar Secrets</title>
+  <!-- ****** Title From App ****** -->
+  <title>Scalar Harmonics: Waveform Odyssey</title>
   <!-- ****** End Updated Title ****** -->
   <style>
+    /* Styles primarily from the target website, with additions/modifications for the app */
     body {
       font-family: 'Montserrat', sans-serif;
       text-align: center;
-      background-color: black;
+      background-color: black; /* Keep black background */
       color: white;
       transition: background-color 0.5s;
+      margin: 0; /* Ensure no default margin */
+      /* overflow: hidden; */ /* REMOVED from app - likely breaks scrolling on target site */
     }
     .header {
       margin-top: 20px;
       margin-bottom: 30px;
     }
     canvas {
-      border: 1px solid white;
+      /* border: 1px solid white; */ /* Optional: Keep or remove border */
       margin: 20px auto;
       display: block;
       max-width: 100%;
+      background-color: black; /* Ensure canvas background is black like the app */
     }
     .controls {
+      /* Keep target website's layout for controls */
       margin: 20px auto;
       max-width: 600px;
       padding: 20px;
       border: 1px solid #333;
       border-radius: 10px;
       background-color: rgba(30, 30, 30, 0.7);
+      /* DO NOT USE position: absolute from app */
     }
-    .slider {
+    /* Keep slider class for potential wider use, but inputs have IDs */
+    .slider, input[type=range] { /* Apply styling to the range inputs */
       width: 80%;
       max-width: 300px;
-      margin: 10px;
+      margin: 10px auto; /* Center sliders */
+      display: block; /* Ensure sliders take full width */
+    }
+    label {
+        display: block; /* Make labels appear above sliders */
+        margin-bottom: 5px;
+        margin-top: 10px;
     }
     section {
       margin: 40px auto;
@@ -61,6 +74,7 @@
     }
     iframe {
       max-width: 100%;
+      border: none; /* Remove border from iframes generally */
     }
     a {
       color: #00ffcc;
@@ -76,25 +90,30 @@
   </style>
 </head>
 <body>
+  <!-- Button from target website -->
   <button id="changeColorBtn">"The wonderful thing about being an artist is that there is no end to creative expression. Painting is my life; my life is painting"</button>
 
+  <!-- Header from target website -->
   <div class="header">
-    <!-- You might want to update the H1 to match the title's theme too, but keeping original for now -->
     <h1>ƨɔimɒnyᗡƐƨɿɘV</h1>
     <p>Visualize and explore wave patterns</p>
   </div>
 
+  <!-- Canvas from target website (used by the app's JS now) -->
   <canvas id="waveCanvas" width="800" height="400"></canvas>
 
+  <!-- Controls container from target website -->
   <div class="controls">
+    <!-- Input elements & labels structure from the App -->
     <label>Frequency: <span id="freqValue">1</span></label>
-    <input type="range" id="frequency" class="slider" min="1" max="50" value="1">
-    <br>
+    <input type="range" id="frequency" min="1" max="50" value="1">
     <label>Amplitude: <span id="ampValue">50</span></label>
-    <input type="range" id="amplitude" class="slider" min="10" max="100" value="50">
+    <input type="range" id="amplitude" min="10" max="100" value="50">
+    <!-- Equation from target website -->
     <p class="equation">eiθ = cos θ + i sin θ</p>
   </div>
 
+  <!-- Sections from target website -->
   <section>
     <p><iframe width="560" height="315" src="https://app.heygen.com/embeds/58ec4c3d17da409d82a20935d74d5b75" title="HeyGen video player" frameborder="0" allow="encrypted-media; fullscreen;" allowfullscreen></iframe></p>
     <p><a href="https://woodyard.streamlit.app/">🪶</a></p>
@@ -119,24 +138,46 @@
   </section>
 
   <script>
-    // Original light switch functionality (keeping as is, though the text might feel disconnected now)
+    // --- JS from Target Website (Non-conflicting parts) ---
     document.getElementById('changeColorBtn').addEventListener('click', function() {
-      document.body.style.backgroundColor = 'black'; // It's already black, maybe toggle? See note below
+      // Original functionality kept, although body is already black.
+      // Might want to change this later (e.g., toggle to a dark gray?)
+      document.body.style.backgroundColor = 'black';
       this.textContent = 'Loïs Mailou Jones';
-      // Consider toggling background or having a different effect:
-      // Example toggle:
-      // if (document.body.style.backgroundColor === 'black') {
-      //   document.body.style.backgroundColor = '#222'; // Slightly lighter
-      // } else {
-      //   document.body.style.backgroundColor = 'black';
-      // }
     });
 
-    // Scalar Explorer wave visualization
+    function ShowHiddenText() {
+      const container = document.getElementById('HiddenTextContainer');
+      if (container.style.display === 'none' || container.style.display === '') {
+        container.style.display = 'block';
+      } else {
+        container.style.display = 'none';
+      }
+    }
+
+    // --- JS from the "Shape Waves" App (Integrated) ---
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
-    let freq = 1, amp = 50;
+    // We use the canvas dimensions defined in the HTML (800x400)
+    // If you want it full screen like the original app, uncomment the next two lines
+    // canvas.width = window.innerWidth;
+    // canvas.height = window.innerHeight;
+    // And add a resize listener if needed:
+    // window.addEventListener('resize', () => {
+    //    canvas.width = window.innerWidth;
+    //    canvas.height = window.innerHeight;
+    // });
+
+
+    let freq = 1, amp = 50; // Initial values match the HTML slider defaults
     let time = 0;
+
+    // Update initial display values based on HTML defaults
+    document.getElementById("freqValue").textContent = document.getElementById("frequency").value;
+    document.getElementById("ampValue").textContent = document.getElementById("amplitude").value;
+    freq = parseFloat(document.getElementById("frequency").value);
+    amp = parseFloat(document.getElementById("amplitude").value);
+
 
     document.getElementById("frequency").oninput = function() {
       freq = this.value;
@@ -149,67 +190,92 @@
     };
 
     function drawWave() {
+      // Save context state before rotation/translation
+      ctx.save();
+
+      // Clear the canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw grid
-      ctx.strokeStyle = "#333333";
-      ctx.lineWidth = 0.5;
+      // Set wave properties (from the app)
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = `hsl(${time * 10 % 360}, 100%, 60%)`; // Adjusted time factor for color speed
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = ctx.strokeStyle;
 
-      // Vertical grid lines
-      for (let x = 0; x < canvas.width; x += 40) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
-        ctx.stroke();
-      }
-
-      // Horizontal grid lines
-      for (let y = 0; y < canvas.height; y += 40) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-        ctx.stroke();
-      }
-
-      // Draw center line
-      ctx.strokeStyle = "#555555";
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(0, canvas.height / 2);
-      ctx.lineTo(canvas.width, canvas.height / 2);
-      ctx.stroke();
-
-      // Draw wave
+      // Draw the wave (from the app)
       ctx.beginPath();
       for (let x = 0; x < canvas.width; x++) {
-        // Use a smaller step for smoother waves if needed, e.g., x += 0.5
-        let y = canvas.height / 2 + amp * Math.sin((x * freq * 0.05) + time); // Adjusted frequency scaling for better visualization range
+         // Adjusted the x scaling factor (x / 50) -> (x / canvas.width * Math.PI * 2) for better scaling with canvas width
+         // Let's try the original app's scaling first: (x / 50)
+        const y = canvas.height / 2 + Math.sin((x / 50) * freq + time) * amp;
         if (x === 0) {
-          ctx.moveTo(x, y);
+            ctx.moveTo(x, y);
         } else {
-          ctx.lineTo(x, y);
+            ctx.lineTo(x, y);
         }
       }
-      ctx.strokeStyle = "#00ffcc"; // Vibrant color
-      ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Animation
-      time += 0.05; // Controls speed of animation
+      // Apply Rotation effect (from the app)
+      // Need to translate origin to center, rotate, then translate back
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate(Math.sin(time / 50) * 0.02); // Subtle rotation
+      ctx.translate(-canvas.width / 2, -canvas.height / 2);
+
+       // Restore context state to prevent rotation affecting subsequent frames incorrectly
+       // Actually, the rotation SHOULD affect the next frame's drawing relative to the *new* orientation.
+       // However, clearing the rect and redrawing means we need to reset the transform each frame *before* drawing.
+       // Let's reset the transform *after* drawing and *before* the next frame.
+       // A cleaner way: Apply transform, draw, restore.
+
+       // Let's rethink the rotation. The original app code applied rotation *after* drawing,
+       // which means the *next* frame's clearRect and drawing would happen on a rotated canvas,
+       // unless the transform was reset. A better approach is to apply transforms *before* drawing.
+
+       /* --- Revised Drawing with Rotation --- */
+       ctx.restore(); // Restore to state before this frame's drawing
+       ctx.save(); // Save clean state
+
+       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+       // Apply transforms *before* drawing
+       ctx.translate(canvas.width / 2, canvas.height / 2);
+       ctx.rotate(Math.sin(time / 50) * 0.02);
+       ctx.translate(-canvas.width / 2, -canvas.height / 2);
+
+       // Set wave properties
+       ctx.lineWidth = 2;
+       ctx.strokeStyle = `hsl(${time * 10 % 360}, 100%, 60%)`;
+       ctx.shadowBlur = 10;
+       ctx.shadowColor = ctx.strokeStyle;
+
+       // Draw the wave
+       ctx.beginPath();
+       for (let x = 0; x < canvas.width; x++) {
+           const y = canvas.height / 2 + Math.sin((x / 50) * freq + time) * amp;
+           if (x === 0) {
+               ctx.moveTo(x, y);
+           } else {
+               ctx.lineTo(x, y);
+           }
+       }
+       ctx.stroke();
+
+       // Restore context to pre-transformed state for the next frame
+       ctx.restore();
+       /* --- End Revised Drawing --- */
+
+
+      // Increment time for animation (from the app)
+      time += 0.1;
+
+      // Request next frame
       requestAnimationFrame(drawWave);
     }
 
+    // Start the wave animation
     drawWave();
 
-    // Function for hidden text
-    function ShowHiddenText() {
-      const container = document.getElementById('HiddenTextContainer');
-      if (container.style.display === 'none' || container.style.display === '') {
-        container.style.display = 'block';
-      } else {
-        container.style.display = 'none';
-      }
-    }
   </script>
 </body>
 </html>
