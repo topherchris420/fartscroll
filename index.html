@@ -11,22 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- ****** Title From App ****** -->
   <title>Vers3Dynamics</title>
-    # Audio Player
-    audio_filename = "Vers3Dynamics_ AI, Cymatics, and Creative Innovation.wav"
-    audio_path = os.path.join(os.path.dirname(__file__), audio_filename)
     
-    st.markdown(f"<h3 style='color: {'#BA55D3' if st.session_state.theme == 'dark' else '#9370DB'};'>🔊 Welcome Message</h3>", unsafe_allow_html=True)
-    if st.button("▶️ Podcast", key="play_audio"):
-        try:
-            if os.path.exists(audio_path):
-                st.audio(audio_path, format="audio/mp3")
-                st.session_state.audio_played = True
-            else:
-                st.warning(f"Audio file not found at: {audio_path}")
-        except Exception as e:
-            st.error(f"Error playing audio: {e}")
-
-
   <!-- ****** End Updated Title ****** -->
   <style>
     /* Styles primarily from the target website, with additions/modifications for the app */
@@ -137,6 +122,21 @@
     <p><a href="https://woodyard.streamlit.app">🪶</a></p>
     <div style="position: relative; overflow: hidden; aspect-ratio: 1920/1080"><iframe src="https://share.synthesia.io/embeds/videos/545ad35e-20fe-4f66-ab01-402880efacf9" loading="lazy" title="Synthesia video player - Torus Verse Dynamics: AI and Beyond" allowfullscreen allow="encrypted-media; fullscreen;" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0; margin: 0; overflow:hidden;"></iframe></div>
   </section>
+  
+# Audio Player
+    audio_filename = "Vers3Dynamics_ AI, Cymatics, and Creative Innovation.wav"
+    audio_path = os.path.join(os.path.dirname(__file__), audio_filename)
+    
+    st.markdown(f"<h3 style='color: {'#BA55D3' if st.session_state.theme == 'dark' else '#9370DB'};'>🔊 Welcome Message</h3>", unsafe_allow_html=True)
+    if st.button("▶️ Podcast", key="play_audio"):
+        try:
+            if os.path.exists(audio_path):
+                st.audio(audio_path, format="audio/mp3")
+                st.session_state.audio_played = True
+            else:
+                st.warning(f"Audio file not found at: {audio_path}")
+        except Exception as e:
+            st.error(f"Error playing audio: {e}")
 
   <section>
     <p><span onclick="ShowHiddenText();" style="cursor: pointer;">𝖂𝖍𝖎𝖘𝖕𝖊𝖗𝖘 𝖔𝖋 𝖙𝖍𝖊 𝕾𝖔𝖚𝖑</span></p> <!-- Added cursor:pointer for better UX -->
