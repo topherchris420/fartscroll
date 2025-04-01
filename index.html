@@ -11,6 +11,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- ****** Title From App ****** -->
   <title>Vers3Dynamics</title>
+    # Audio Player
+    audio_filename = "Vers3Dynamics_ AI, Cymatics, and Creative Innovation.wav"
+    audio_path = os.path.join(os.path.dirname(__file__), audio_filename)
+    
+    st.markdown(f"<h3 style='color: {'#BA55D3' if st.session_state.theme == 'dark' else '#9370DB'};'>🔊 Welcome Message</h3>", unsafe_allow_html=True)
+    if st.button("▶️ Podcast", key="play_audio"):
+        try:
+            if os.path.exists(audio_path):
+                st.audio(audio_path, format="audio/mp3")
+                st.session_state.audio_played = True
+            else:
+                st.warning(f"Audio file not found at: {audio_path}")
+        except Exception as e:
+            st.error(f"Error playing audio: {e}")
+
+
   <!-- ****** End Updated Title ****** -->
   <style>
     /* Styles primarily from the target website, with additions/modifications for the app */
@@ -99,10 +115,6 @@
   <div class="header">
     <h1>ƨɔimɒnyᗡƐƨɿɘV</h1>
     <p>Harmonics: Waveform Odyssey</p>
-    # Audio Player
-    audio_filename = "Vers3Dynamics_ AI, Cymatics, and Creative Innovation.wav"
-    audio_path = os.path.join(os.path.dirname(__file__), audio_filename)
-    
   </div>
 
   <!-- Canvas from target website (used by the app's JS now) -->
