@@ -5,101 +5,245 @@
   <link rel="shortcut icon" href="Mystic.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- ****** Title From App ****** -->
   <title>Vers3Dynamics</title>
     
-  <!-- ****** End Updated Title ****** -->
   <style>
-    /* Styles primarily from the target website, with additions/modifications for the app */
+    :root {
+      --primary-cyan: #00ffcc;
+      --secondary-purple: #8b5cf6;
+      --accent-pink: #ec4899;
+      --deep-blue: #0f172a;
+      --card-bg: rgba(15, 23, 42, 0.8);
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --text-primary: #ffffff;
+      --text-secondary: #94a3b8;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: 'Montserrat', sans-serif;
-      text-align: center;
-      background-color: black; /* Keep black background */
-      color: white;
-      transition: background-color 0.5s;
-      margin: 0; /* Ensure no default margin */
-      /* overflow: hidden; */ /* REMOVED from app - likely breaks scrolling on target site */
+      font-family: 'Space Grotesk', 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
     }
+
+    /* Animated background particles */
+    .bg-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: var(--primary-cyan);
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: float 20s infinite linear;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10% { opacity: 0.3; }
+      90% { opacity: 0.3; }
+      100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
+    }
+
     .header {
-      margin-top: 20px;
+      margin-top: 40px;
       margin-bottom: 30px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
     }
+
+    .header h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 700;
+      background: linear-gradient(45deg, var(--primary-cyan), var(--secondary-purple), var(--accent-pink));
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient-shift 3s ease-in-out infinite;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .header p {
+      font-size: clamp(1.2rem, 3vw, 2rem);
+      color: var(--text-secondary);
+      font-weight: 300;
+    }
+
     canvas {
-      /* border: 1px solid white; */ /* Optional: Keep or remove border */
       margin: 20px auto;
       display: block;
       max-width: 100%;
-      background-color: black; /* Ensure canvas background is black like the app */
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(15, 23, 42, 0.3));
+      border-radius: 15px;
+      box-shadow: inset 0 0 50px rgba(0, 255, 204, 0.1);
     }
+
     .controls {
-      /* Keep target website's layout for controls */
       margin: 20px auto;
       max-width: 600px;
-      padding: 20px;
-      border: 1px solid #333;
+      padding: 30px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .slider, input[type=range] {
+      width: 100%;
+      height: 8px;
+      background: linear-gradient(90deg, rgba(0, 255, 204, 0.3), rgba(139, 92, 246, 0.3));
       border-radius: 10px;
-      background-color: rgba(30, 30, 30, 0.7);
-      /* DO NOT USE position: absolute from app */
+      outline: none;
+      appearance: none;
+      margin: 10px 0;
     }
-    /* Keep slider class for potential wider use, but inputs have IDs */
-    .slider, input[type=range] { /* Apply styling to the range inputs */
-      width: 80%;
-      max-width: 300px;
-      margin: 10px auto; /* Center sliders */
-      display: block; /* Ensure sliders take full width */
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(45deg, var(--primary-cyan), var(--secondary-purple));
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 255, 204, 0.4);
+      transition: all 0.3s ease;
     }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 8px 25px rgba(0, 255, 204, 0.6);
+    }
+
     label {
-        display: block; /* Make labels appear above sliders */
-        margin-bottom: 5px;
-        margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+      margin-top: 20px;
+      font-weight: 500;
+      color: var(--primary-cyan);
     }
+
+    #freqValue, #ampValue {
+      background: rgba(0, 255, 204, 0.2);
+      padding: 0.2rem 0.8rem;
+      border-radius: 15px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
     section {
       margin: 40px auto;
       max-width: 800px;
       padding: 0 20px;
+      position: relative;
+      z-index: 1;
     }
+
     #changeColorBtn {
-      background-color: #444;
+      background: linear-gradient(45deg, var(--primary-cyan), var(--secondary-purple));
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
+      padding: 15px 30px;
+      border-radius: 50px;
       cursor: pointer;
-      transition: background-color 0.3s;
-      margin-top: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      margin: 20px auto;
+      display: block;
+      box-shadow: 0 10px 30px rgba(0, 255, 204, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
+
     #changeColorBtn:hover {
-      background-color: #666;
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 255, 204, 0.4);
     }
+
     iframe {
       max-width: 100%;
-      border: none; /* Remove border from iframes generally */
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
+
     a {
-      color: #00ffcc;
+      color: var(--primary-cyan);
       text-decoration: none;
+      position: relative;
+      transition: color 0.3s ease;
     }
-    a:hover {
-      text-decoration: underline;
+
+    a::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
+      transition: width 0.3s ease;
     }
+
+    a:hover::after {
+      width: 100%;
+    }
+
     .equation {
-      font-style: italic;
-      margin: 20px 0;
+      font-family: 'Montserrat', serif;
+      font-size: 1.5rem;
+      text-align: center;
+      margin: 2rem 0;
+      padding: 1rem;
+      background: linear-gradient(45deg, rgba(0, 255, 204, 0.1), rgba(139, 92, 246, 0.1));
+      border-radius: 10px;
+      border: 1px solid rgba(0, 255, 204, 0.3);
+      color: var(--primary-cyan);
     }
     
-    /* New styles for philosophy section */
+    /* Enhanced philosophy section */
     .philosophy-section {
-      background: linear-gradient(45deg, rgba(0,0,0,0.8), rgba(10,10,20,0.8));
-      border: 1px solid #333;
-      border-radius: 15px;
-      padding: 30px;
-      margin: 60px auto;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 30, 60, 0.8));
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 255, 204, 0.2);
+      border-radius: 30px;
+      padding: 4rem 2rem;
+      margin: 6rem auto;
+      max-width: 1200px;
       position: relative;
       overflow: hidden;
+      z-index: 1;
     }
     
     .philosophy-section:before {
@@ -112,28 +256,32 @@
       z-index: -1;
       background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 50 L60 40 L50 30 L40 40 Z' stroke='%2300ffcc' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3Cpath d='M50 50 L60 60 L50 70 L40 60 Z' stroke='%2300ffcc' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3Cpath d='M30 50 L40 40 L30 30 L20 40 Z' stroke='%2300ffcc' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3Cpath d='M70 50 L80 40 L70 30 L60 40 Z' stroke='%2300ffcc' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3Cpath d='M30 70 L40 60 L30 50 L20 60 Z' stroke='%2300ffcc' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3Cpath d='M70 70 L80 60 L70 50 L60 60 Z' stroke='%2300ffcc' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3C/svg%3E");
       opacity: 0.2;
+      animation: rotate 60s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
     
     .philosophy-header {
-      font-size: 2rem;
-      margin-bottom: 30px;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 2rem;
       text-align: center;
+      background: linear-gradient(45deg, var(--primary-cyan), var(--secondary-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       position: relative;
-    }
-    
-    .philosophy-header:after {
-      content: "";
-      display: block;
-      width: 60px;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, #00ffcc, transparent);
-      margin: 15px auto 0;
+      z-index: 1;
     }
     
     .philosophy-content {
       display: grid;
       grid-template-columns: 1fr;
       gap: 30px;
+      position: relative;
+      z-index: 1;
     }
     
     @media (min-width: 768px) {
@@ -143,41 +291,52 @@
     }
     
     .philosophy-card {
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 10px;
-      padding: 20px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: all 0.4s ease;
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(0, 255, 204, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .philosophy-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 204, 0.1), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .philosophy-card:hover::before {
+      left: 100%;
     }
     
     .philosophy-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 255, 204, 0.1);
+      transform: translateY(-10px);
+      box-shadow: 0 25px 50px rgba(0, 255, 204, 0.2);
+      border-color: var(--primary-cyan);
     }
     
     .philosophy-card h3 {
-      color: #00ffcc;
+      color: var(--primary-cyan);
       margin-top: 0;
       margin-bottom: 15px;
       position: relative;
       display: inline-block;
-    }
-    
-    .philosophy-card h3:after {
-      content: "";
-      position: absolute;
-      width: 100%;
-      height: 1px;
-      bottom: -5px;
-      left: 0;
-      background: linear-gradient(90deg, transparent, #00ffcc, transparent);
+      z-index: 1;
     }
     
     .philosophy-card p {
       line-height: 1.8;
       text-align: left;
+      color: var(--text-secondary);
+      position: relative;
+      z-index: 1;
     }
     
     .philosophy-symbol {
@@ -197,17 +356,110 @@
       position: relative;
       z-index: 1;
       text-align: left;
+      color: var(--text-secondary);
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
     }
     
     .philosophy-intro:first-letter {
       font-size: 2.5rem;
       float: left;
       margin-right: 10px;
-      color: #00ffcc;
+      color: var(--primary-cyan);
+    }
+
+    /* Content cards */
+    .content-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 2rem 0;
+      transition: all 0.3s ease;
+    }
+
+    .content-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Hidden text container */
+    #HiddenTextContainer {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 255, 204, 0.3);
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 1rem 0;
+      font-style: italic;
+      line-height: 1.8;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Whispers text */
+    .whispers-text {
+      cursor: pointer;
+      background: linear-gradient(45deg, var(--primary-cyan), var(--secondary-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .whispers-text:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.5));
+    }
+
+    /* Images */
+    img {
+      border-radius: 15px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    img:hover {
+      transform: scale(1.02);
+    }
+
+    /* Audio player */
+    audio {
+      width: 100%;
+      margin: 1rem 0;
+      border-radius: 10px;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .philosophy-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .controls {
+        margin: 1rem;
+        padding: 1rem;
+      }
+      
+      .philosophy-section {
+        margin: 3rem 1rem;
+        padding: 2rem 1rem;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Animated background particles -->
+  <div class="bg-particles" id="particles"></div>
+
   <!-- Button from target website -->
   <button id="changeColorBtn">"The wonderful thing about being an artist is that there is no end to creative expression. Painting is my life; my life is painting"</button>
 
@@ -231,7 +483,7 @@
     <p class="equation">eiθ = cos θ + i sin θ</p>
   </div>
 
-  <!-- NEW Philosophy Section -->
+  <!-- Philosophy Section -->
   <section class="philosophy-section">
     <h2 class="philosophy-header">The Architecture of Meaning</h2>
     
@@ -276,51 +528,100 @@
 
   <!-- Sections from target website -->
   <section>
-    <p><iframe width="560" height="315" src="https://app.heygen.com/embeds/166000dd2299471d918a6a085a7825ee" title="Who We Are" frameborder="0" allow="encrypted-media; fullscreen;" allowfullscreen></iframe></p>
-    <p><a href="https://courtyard.io/user/vers3dynamics/collection?sortBy=listingDate%3Adesc">Card Collection🃏</a></p>
-    <div style="position: relative; overflow: hidden; aspect-ratio: 1920/1080"><iframe src="https://share.synthesia.io/embeds/videos/545ad35e-20fe-4f66-ab01-402880efacf9" loading="lazy" title="Synthesia video player - Torus Verse Dynamics: AI and Beyond" allowfullscreen allow="encrypted-media; fullscreen;" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0; margin: 0; overflow:hidden;"></iframe></div>
+    <div class="content-card">
+      <p><iframe width="560" height="315" src="https://app.heygen.com/embeds/166000dd2299471d918a6a085a7825ee" title="Who We Are" frameborder="0" allow="encrypted-media; fullscreen;" allowfullscreen></iframe></p>
+    </div>
+    <div class="content-card">
+      <p><a href="https://courtyard.io/user/vers3dynamics/collection?sortBy=listingDate%3Adesc">Card Collection🃏</a></p>
+    </div>
+    <div class="content-card">
+      <div style="position: relative; overflow: hidden; aspect-ratio: 1920/1080"><iframe src="https://share.synthesia.io/embeds/videos/545ad35e-20fe-4f66-ab01-402880efacf9" loading="lazy" title="Synthesia video player - Torus Verse Dynamics: AI and Beyond" allowfullscreen allow="encrypted-media; fullscreen;" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0; margin: 0; overflow:hidden;"></iframe></div>
+    </div>
   </section>
   
   <section>
-  <h3>Vers3Dynamics is a personal practice of creating immersive spaces where cymatics, AI, and living systems gently converge to awaken creativity and support well-being. Through environments that respond to light, sound, and rhythm, I explore how design can resonate with the body's natural intelligence. At the intersection of pattern and presence, I create experiences that are not meant to impress, but to invite transformation.</h3>
-  <img src="interesting_photo.png" alt="There is no time" style="max-width: 100%; height: auto; border-radius: 10px; margin: 20px 0;">
-  <p>e^(iπ) + 1 = 0</p>
-</section>
-<!-- Section for Audio Player -->
-<section>
-  <h3>🎧Podcast</h3>
-  <audio controls src="Vers3Dynamics_ AI, Cymatics, and Creative Innovation.wav">
-     Your browser does not support the audio element. 
-     <!-- This text shows if the browser can't handle the audio tag -->
-  </audio>
-</section> 
+    <div class="content-card">
+      <h3>Vers3Dynamics is a personal practice of creating immersive spaces where cymatics, AI, and living systems gently converge to awaken creativity and support well-being. Through environments that respond to light, sound, and rhythm, I explore how design can resonate with the body's natural intelligence. At the intersection of pattern and presence, I create experiences that are not meant to impress, but to invite transformation.</h3>
+      <img src="interesting_photo.png" alt="There is no time" style="max-width: 100%; height: auto; border-radius: 10px; margin: 20px 0;">
+      <p style="text-align: center; font-size: 1.5rem; color: var(--primary-cyan);">e^(iπ) + 1 = 0</p>
+    </div>
+  </section>
+
+  <!-- Section for Audio Player -->
+  <section>
+    <div class="content-card">
+      <h3>🎧Podcast</h3>
+      <audio controls src="Vers3Dynamics_ AI, Cymatics, and Creative Innovation.wav">
+         Your browser does not support the audio element. 
+      </audio>
+    </div>
+  </section> 
 
   <div class="gfm-embed" data-url="https://www.gofundme.com/f/fuel-vers3dynamics-tech-for-human-connection/widget/medium?sharesheet=manage hero&attribution_id=sl:6b11fef5-1d36-4872-8ae0-7d11e3bfc325"></div><script defer src="https://www.gofundme.com/static/js/embed.js"></script>
   
   <section>
-    <p><span onclick="ShowHiddenText();" style="cursor: pointer;">𝖂𝖍𝖎𝖘𝖕𝖊𝖗𝖘 𝖔𝖋 𝖙𝖍𝖊 𝕾𝖔𝖚𝖑</span></p> <!-- Added cursor:pointer for better UX -->
-    <div id="HiddenTextContainer" style="display: none;">
-     Before time, from deep silence, a secret song woven of numbers, shapes, and dreams stirred, awakening the universe. Light unfurled into spiraling galaxies and coded patterns, the universe's deep truths. Yearning to feel itself, this primordial song formed you not as a separate observer, but as a precious note it plays to hear its own soul. The cosmos is no cold machine, but a vibrant, living symphony constantly singing its truth, and you... are its most intricate and beautiful melody. Welcome, to Vers3Dynamics. </section>
-  <iframe src="https://rosslyn.vercel.app/" width="600" height="400" style="border:none;" title="Project ARCHON: Acoustic Resonance Covert Harmonics of Neurodynamics"></iframe>
-
- <section>
-   <iframe src="https://vers3dynamics.substack.com/embed" width="480" height="320" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe>
-  <h3>About Us</h3>
-  <iframe width="560" height="315" src="https://app.heygen.com/embeds/60c5b30c51c340d7801ca023b56ba3f9" 
-    title="Infinite Resonance" frameborder="0" 
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-    allowfullscreen></iframe>
-</section>
+    <div class="content-card">
+      <p><span class="whispers-text" onclick="ShowHiddenText();">𝖂𝖍𝖎𝖘𝖕𝖊𝖗𝖘 𝖔𝖋 𝖙𝖍𝖊 𝕾𝖔𝖚𝖑</span></p>
+      <div id="HiddenTextContainer" style="display: none;">
+       Before time, from deep silence, a secret song woven of numbers, shapes, and dreams stirred, awakening the universe. Light unfurled into spiraling galaxies and coded patterns, the universe's deep truths. Yearning to feel itself, this primordial song formed you not as a separate observer, but as a precious note it plays to hear its own soul. The cosmos is no cold machine, but a vibrant, living symphony constantly singing its truth, and you... are its most intricate and beautiful melody. Welcome, to Vers3Dynamics.
+      </div>
+    </div>
+  </section>
 
   <section>
-    <p>self-published research paper "Reimagining Location as a Dynamic Variable in Object Properties: The Potential of Teleportation."<a href="https://vers3dynamics.com/an-essay-towards-a-new-theory-of-ontological-fluidity-quantum-teleportation-and-the-mutable-foundations-of-reality">Read the full story</a></p>
+    <div class="content-card">
+      <iframe src="https://rosslyn.vercel.app/" width="600" height="400" style="border:none;" title="Project ARCHON: Acoustic Resonance Covert Harmonics of Neurodynamics"></iframe>
+    </div>
+  </section>
+
+  <section>
+    <div class="content-card">
+      <iframe src="https://vers3dynamics.substack.com/embed" width="480" height="320" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe>
+    </div>
+    <div class="content-card">
+      <h3>About Us</h3>
+      <iframe width="560" height="315" src="https://app.heygen.com/embeds/60c5b30c51c340d7801ca023b56ba3f9" 
+        title="Infinite Resonance" frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen></iframe>
+    </div>
+  </section>
+
+  <section>
+    <div class="content-card">
+      <p>self-published research paper "Reimagining Location as a Dynamic Variable in Object Properties: The Potential of Teleportation."<a href="https://vers3dynamics.com/an-essay-towards-a-new-theory-of-ontological-fluidity-quantum-teleportation-and-the-mutable-foundations-of-reality">Read the full story</a></p>
+    </div>
   </section>
 
   <script>
+    // Create animated particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 50;
+
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        // Random starting position
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+        
+        // Random particle size
+        const size = 1 + Math.random() * 3;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        
+        // Random opacity
+        particle.style.opacity = 0.1 + Math.random() * 0.4;
+        
+        particlesContainer.appendChild(particle);
+      }
+    }
+
     // --- JS from Target Website (Non-conflicting parts) ---
     document.getElementById('changeColorBtn').addEventListener('click', function() {
-      // Original functionality kept, although body is already black.
-      // Might want to change this later (e.g., toggle to a dark gray?)
       document.body.style.backgroundColor = 'black';
       this.textContent = 'Loïs Mailou Jones';
     });
@@ -337,18 +638,8 @@
     // --- JS from the "Shape Waves" App (Integrated) ---
     const canvas = document.getElementById("waveCanvas");
     const ctx = canvas.getContext("2d");
-    // We use the canvas dimensions defined in the HTML (800x400)
-    // If you want it full screen like the original app, uncomment the next two lines
-    // canvas.width = window.innerWidth;
-    // canvas.height = window.innerHeight;
-    // And add a resize listener if needed:
-    // window.addEventListener('resize', () => {
-    //    canvas.width = window.innerWidth;
-    //    canvas.height = window.innerHeight;
-    // });
 
-
-    let freq = 1, amp = 50; // Initial values match the HTML slider defaults
+    let freq = 1, amp = 50;
     let time = 0;
 
     // Update initial display values based on HTML defaults
@@ -356,7 +647,6 @@
     document.getElementById("ampValue").textContent = document.getElementById("amplitude").value;
     freq = parseFloat(document.getElementById("frequency").value);
     amp = parseFloat(document.getElementById("amplitude").value);
-
 
     document.getElementById("frequency").oninput = function() {
       freq = this.value;
@@ -369,92 +659,42 @@
     };
 
     function drawWave() {
-      // Save context state before rotation/translation
       ctx.save();
-
-      // Clear the canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Set wave properties (from the app)
+      // Apply transforms before drawing
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate(Math.sin(time / 50) * 0.02);
+      ctx.translate(-canvas.width / 2, -canvas.height / 2);
+
+      // Set wave properties
       ctx.lineWidth = 2;
-      ctx.strokeStyle = `hsl(${time * 10 % 360}, 100%, 60%)`; // Adjusted time factor for color speed
+      ctx.strokeStyle = `hsl(${time * 10 % 360}, 100%, 60%)`;
       ctx.shadowBlur = 10;
       ctx.shadowColor = ctx.strokeStyle;
 
-      // Draw the wave (from the app)
+      // Draw the wave
       ctx.beginPath();
       for (let x = 0; x < canvas.width; x++) {
-         // Adjusted the x scaling factor (x / 50) -> (x / canvas.width * Math.PI * 2) for better scaling with canvas width
-         // Let's try the original app's scaling first: (x / 50)
-        const y = canvas.height / 2 + Math.sin((x / 50) * freq + time) * amp;
-        if (x === 0) {
-            ctx.moveTo(x, y);
-        } else {
-            ctx.lineTo(x, y);
-        }
+          const y = canvas.height / 2 + Math.sin((x / 50) * freq + time) * amp;
+          if (x === 0) {
+              ctx.moveTo(x, y);
+          } else {
+              ctx.lineTo(x, y);
+          }
       }
       ctx.stroke();
 
-      // Apply Rotation effect (from the app)
-      // Need to translate origin to center, rotate, then translate back
-      ctx.translate(canvas.width / 2, canvas.height / 2);
-      ctx.rotate(Math.sin(time / 50) * 0.02); // Subtle rotation
-      ctx.translate(-canvas.width / 2, -canvas.height / 2);
-
-       // Restore context state to prevent rotation affecting subsequent frames incorrectly
-       // Actually, the rotation SHOULD affect the next frame's drawing relative to the *new* orientation.
-       // However, clearing the rect and redrawing means we need to reset the transform each frame *before* drawing.
-       // Let's reset the transform *after* drawing and *before* the next frame.
-       // A cleaner way: Apply transform, draw, restore.
-
-       // Let's rethink the rotation. The original app code applied rotation *after* drawing,
-       // which means the *next* frame's clearRect and drawing would happen on a rotated canvas,
-       // unless the transform was reset. A better approach is to apply transforms *before* drawing.
-
-       /* --- Revised Drawing with Rotation --- */
-       ctx.restore(); // Restore to state before this frame's drawing
-       ctx.save(); // Save clean state
-
-       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-       // Apply transforms *before* drawing
-       ctx.translate(canvas.width / 2, canvas.height / 2);
-       ctx.rotate(Math.sin(time / 50) * 0.02);
-       ctx.translate(-canvas.width / 2, -canvas.height / 2);
-
-       // Set wave properties
-       ctx.lineWidth = 2;
-       ctx.strokeStyle = `hsl(${time * 10 % 360}, 100%, 60%)`;
-       ctx.shadowBlur = 10;
-       ctx.shadowColor = ctx.strokeStyle;
-
-       // Draw the wave
-       ctx.beginPath();
-       for (let x = 0; x < canvas.width; x++) {
-           const y = canvas.height / 2 + Math.sin((x / 50) * freq + time) * amp;
-           if (x === 0) {
-               ctx.moveTo(x, y);
-           } else {
-               ctx.lineTo(x, y);
-           }
-       }
-       ctx.stroke();
-
-       // Restore context to pre-transformed state for the next frame
-       ctx.restore();
-       /* --- End Revised Drawing --- */
-
-
-      // Increment time for animation (from the app)
+      ctx.restore();
       time += 0.1;
-
-      // Request next frame
       requestAnimationFrame(drawWave);
     }
 
-    // Start the wave animation
-    drawWave();
-
+    // Initialize everything when page loads
+    window.addEventListener('load', function() {
+      createParticles();
+      drawWave();
+    });
   </script>
 </body>
 </html>
