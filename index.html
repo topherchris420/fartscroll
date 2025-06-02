@@ -231,6 +231,53 @@
       border: 1px solid rgba(0, 255, 204, 0.3);
       color: var(--primary-cyan);
     }
+
+    /* Equation Button Styles */
+    #equationBtn {
+      font-family: 'Montserrat', serif;
+      font-size: 1.5rem;
+      text-align: center;
+      margin: 2rem auto;
+      padding: 1.5rem 2rem;
+      background: linear-gradient(45deg, rgba(0, 255, 204, 0.1), rgba(139, 92, 246, 0.1));
+      border: 2px solid var(--primary-cyan);
+      border-radius: 15px;
+      color: var(--primary-cyan);
+      cursor: pointer;
+      transition: all 0.4s ease;
+      display: block;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 25px rgba(0, 255, 204, 0.2);
+    }
+
+    #equationBtn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 204, 0.2), transparent);
+      transition: left 0.6s ease;
+    }
+
+    #equationBtn:hover::before {
+      left: 100%;
+    }
+
+    #equationBtn:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--secondary-purple);
+      box-shadow: 0 15px 40px rgba(0, 255, 204, 0.4);
+      background: linear-gradient(45deg, rgba(0, 255, 204, 0.2), rgba(139, 92, 246, 0.2));
+    }
+
+    #equationBtn:active {
+      transform: translateY(-5px) scale(1.01);
+    }
     
     /* Enhanced philosophy section */
     .philosophy-section {
@@ -453,6 +500,11 @@
         margin: 3rem 1rem;
         padding: 2rem 1rem;
       }
+
+      #equationBtn {
+        font-size: 1.2rem;
+        padding: 1.2rem 1.5rem;
+      }
     }
   </style>
 </head>
@@ -479,8 +531,10 @@
     <input type="range" id="frequency" min="1" max="50" value="1">
     <label>Amplitude: <span id="ampValue">50</span></label>
     <input type="range" id="amplitude" min="10" max="100" value="50">
-    <!-- Equation from target website -->
-    <p class="equation">eiθ = cos θ + i sin θ</p>
+    <!-- Clickable Equation Button -->
+    <a href="https://vers3-quantum-paths.lovable.app/" target="_blank" id="equationBtn">
+      e<sup>iθ</sup> = cos θ + i sin θ
+    </a>
   </div>
 
   <!-- Philosophy Section -->
@@ -657,41 +711,4 @@
 
     function drawWave() {
       ctx.save();
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Apply transforms before drawing
-      ctx.translate(canvas.width / 2, canvas.height / 2);
-      ctx.rotate(Math.sin(time / 50) * 0.02);
-      ctx.translate(-canvas.width / 2, -canvas.height / 2);
-
-      // Set wave properties
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = `hsl(${time * 10 % 360}, 100%, 60%)`;
-      ctx.shadowBlur = 10;
-      ctx.shadowColor = ctx.strokeStyle;
-
-      // Draw the wave
-      ctx.beginPath();
-      for (let x = 0; x < canvas.width; x++) {
-          const y = canvas.height / 2 + Math.sin((x / 50) * freq + time) * amp;
-          if (x === 0) {
-              ctx.moveTo(x, y);
-          } else {
-              ctx.lineTo(x, y);
-          }
-      }
-      ctx.stroke();
-
-      ctx.restore();
-      time += 0.1;
-      requestAnimationFrame(drawWave);
-    }
-
-    // Initialize everything when page loads
-    window.addEventListener('load', function() {
-      createParticles();
-      drawWave();
-    });
-  </script>
-</body>
-</html>
+      ctx.clear
