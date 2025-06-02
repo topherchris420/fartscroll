@@ -509,35 +509,27 @@
   </style>
 </head>
 <body>
-  <!-- Animated background particles -->
   <div class="bg-particles" id="particles"></div>
 
-  <!-- Button from target website -->
   <button id="changeColorBtn">"The wonderful thing about being an artist is that there is no end to creative expression. Painting is my life; my life is painting"</button>
 
-  <!-- Header from target website -->
   <div class="header">
     <h1>ƨɔimɒnyᗡƐƨɿɘV</h1>
     <p>Harmonics: Waveform Odyssey</p>
   </div>
 
-  <!-- Canvas from target website (used by the app's JS now) -->
   <canvas id="waveCanvas" width="800" height="400"></canvas>
 
-  <!-- Controls container from target website -->
   <div class="controls">
-    <!-- Input elements & labels structure from the App -->
     <label>Frequency: <span id="freqValue">1</span></label>
     <input type="range" id="frequency" min="1" max="50" value="1">
     <label>Amplitude: <span id="ampValue">50</span></label>
     <input type="range" id="amplitude" min="10" max="100" value="50">
-    <!-- Clickable Equation Button -->
     <a href="https://vers3-quantum-paths.lovable.app/" target="_blank" id="equationBtn">
       e<sup>iθ</sup> = cos θ + i sin θ
     </a>
   </div>
 
-  <!-- Philosophy Section -->
   <section class="philosophy-section">
     <h2 class="philosophy-header">The Architecture of Meaning</h2>
     
@@ -580,13 +572,12 @@
     </div>
   </section>
 
-  <!-- Sections from target website -->
   <section>
     <div class="content-card">
       <p><iframe width="560" height="315" src="https://app.heygen.com/embeds/a6c5fd44425c4c7e899fa21b079e834b" title="HeyGen video player" frameborder="0" allow="encrypted-media; fullscreen;" allowfullscreen></iframe></p>
     </div>
     <div class="content-card">
-      <p><a href="https://courtyard.io/user/vers3dynamics/collection?sortBy=listingDate%3Adesc">   Card Collection🃏</a></p>
+      <p><a href="https://courtyard.io/user/vers3dynamics/collection?sortBy=listingDate%3Adesc">    Card Collection🃏</a></p>
     </div>
     <div class="content-card">
       <p><iframe width="560" height="315" src="https://app.heygen.com/embeds/276a5f4bfbb74a70a544b01c9d7f751e" title="HeyGen video player" frameborder="0" allow="encrypted-media; fullscreen;" allowfullscreen></iframe></div>
@@ -601,12 +592,11 @@
     </div>
   </section>
 
-  <!-- Section for Audio Player -->
   <section>
     <div class="content-card">
       <h3>🎧Podcast</h3>
       <audio controls src="Vers3Dynamics_ AI, Cymatics, and Creative Innovation.wav">
-         Your browser does not support the audio element. 
+          Your browser does not support the audio element. 
       </audio>
     </div>
   </section> 
@@ -617,7 +607,7 @@
     <div class="content-card">
       <p><span class="whispers-text" onclick="ShowHiddenText();">𝖂𝖍𝖎𝖘𝖕𝖊𝖗𝖘 𝖔𝖋 𝖙𝖍𝖊 𝕾𝖔𝖚𝖑</span></p>
       <div id="HiddenTextContainer" style="display: none;">
-       Before time, from deep silence, a secret song woven of numbers, shapes, and dreams stirred, awakening the universe. Light unfurled into spiraling galaxies and coded patterns, the universe's deep truths. Yearning to feel itself, this primordial song formed you not as a separate observer, but as a precious note it plays to hear its own soul. The cosmos is no cold machine, but a vibrant, living symphony constantly singing its truth, and you... are its most intricate and beautiful melody. Welcome, to Vers3Dynamics.
+        Before time, from deep silence, a secret song woven of numbers, shapes, and dreams stirred, awakening the universe. Light unfurled into spiraling galaxies and coded patterns, the universe's deep truths. Yearning to feel itself, this primordial song formed you not as a separate observer, but as a precious note it plays to hear its own soul. The cosmos is no cold machine, but a vibrant, living symphony constantly singing its truth, and you... are its most intricate and beautiful melody. Welcome, to Vers3Dynamics.
       </div>
     </div>
   </section>
@@ -648,6 +638,7 @@
     // Create animated particles
     function createParticles() {
       const particlesContainer = document.getElementById('particles');
+      if (!particlesContainer) return; // Guard clause
       const particleCount = 50;
 
       for (let i = 0; i < particleCount; i++) {
@@ -672,43 +663,106 @@
     }
 
     // --- JS from Target Website (Non-conflicting parts) ---
-    document.getElementById('changeColorBtn').addEventListener('click', function() {
-      document.body.style.backgroundColor = 'black';
-      this.textContent = 'Loïs Mailou Jones';
-    });
+    const changeColorButton = document.getElementById('changeColorBtn');
+    if (changeColorButton) {
+        changeColorButton.addEventListener('click', function() {
+            document.body.style.backgroundColor = 'black';
+            this.textContent = 'Loïs Mailou Jones';
+        });
+    }
+
 
     function ShowHiddenText() {
       const container = document.getElementById('HiddenTextContainer');
-      if (container.style.display === 'none' || container.style.display === '') {
-        container.style.display = 'block';
-      } else {
-        container.style.display = 'none';
+      if (container) { // Guard clause
+          if (container.style.display === 'none' || container.style.display === '') {
+            container.style.display = 'block';
+          } else {
+            container.style.display = 'none';
+          }
       }
     }
 
     // --- JS from the "Shape Waves" App (Integrated) ---
     const canvas = document.getElementById("waveCanvas");
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas ? canvas.getContext("2d") : null; // Ensure canvas and ctx exist
 
     let freq = 1, amp = 50;
     let time = 0;
 
-    // Update initial display values based on HTML defaults
-    document.getElementById("freqValue").textContent = document.getElementById("frequency").value;
-    document.getElementById("ampValue").textContent = document.getElementById("amplitude").value;
-    freq = parseFloat(document.getElementById("frequency").value);
-    amp = parseFloat(document.getElementById("amplitude").value);
+    const freqSlider = document.getElementById("frequency");
+    const ampSlider = document.getElementById("amplitude");
+    const freqValueSpan = document.getElementById("freqValue");
+    const ampValueSpan = document.getElementById("ampValue");
 
-    document.getElementById("frequency").oninput = function() {
-      freq = this.value;
-      document.getElementById("freqValue").textContent = freq;
-    };
+    // Update initial display values based on HTML defaults if elements exist
+    if (freqSlider && freqValueSpan) {
+        freq = parseFloat(freqSlider.value);
+        freqValueSpan.textContent = freqSlider.value;
+    }
+    if (ampSlider && ampValueSpan) {
+        amp = parseFloat(ampSlider.value);
+        ampValueSpan.textContent = ampSlider.value;
+    }
+    
+    if (freqSlider) {
+        freqSlider.oninput = function() {
+            freq = parseFloat(this.value);
+            if(freqValueSpan) freqValueSpan.textContent = this.value;
+        };
+    }
 
-    document.getElementById("amplitude").oninput = function() {
-      amp = this.value;
-      document.getElementById("ampValue").textContent = amp;
-    };
+    if (ampSlider) {
+        ampSlider.oninput = function() {
+            amp = parseFloat(this.value);
+            if(ampValueSpan) ampValueSpan.textContent = this.value;
+        };
+    }
 
     function drawWave() {
+      if (!ctx || !canvas) return; // Do nothing if canvas isn't set up
+
       ctx.save();
-      ctx.clear
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+
+      // Get wave color from CSS variable, with a fallback
+      let waveColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-cyan').trim();
+      if (!waveColor) {
+          waveColor = '#00ffcc'; // Fallback color if CSS var is not found
+      }
+      ctx.strokeStyle = waveColor;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+
+      const yOffset = canvas.height / 2;
+      const freqScale = 0.02; // Adjusted for a common visual appeal
+
+      // Move to the starting point of the wave
+      ctx.moveTo(0, yOffset + amp * Math.sin(0 * freq * freqScale + time));
+
+      for (let x = 0; x < canvas.width; x++) {
+        const y = yOffset + amp * Math.sin(x * freq * freqScale + time);
+        ctx.lineTo(x, y);
+      }
+
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function animate() {
+        if (!ctx || !canvas) return; // Don't animate if canvas isn't set up
+        drawWave();
+        time += 0.05; // Increment time for wave phase animation
+        requestAnimationFrame(animate); // Loop the animation
+    }
+
+    // Call functions to initialize when the DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        createParticles(); // Initialize background particles
+        if (ctx && canvas) { // Only start animation if canvas is ready
+             animate(); // Start the wave animation
+        }
+    });
+  </script>
+</body>
+</html>
