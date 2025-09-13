@@ -485,6 +485,28 @@
       border-radius: 10px;
     }
 
+    /* Back to top button */
+    #backToTopBtn {
+      display: none;
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      z-index: 99;
+      background: linear-gradient(45deg, var(--primary-cyan), var(--secondary-purple));
+      color: white;
+      border: none;
+      padding: 15px;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    #backToTopBtn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    }
+
     /* Responsive design */
     @media (max-width: 768px) {
       .philosophy-content {
@@ -634,6 +656,8 @@
     </div>
   </section>
 
+  <button id="backToTopBtn" aria-label="Back to top">▲</button>
+
   <script>
     // Create animated particles
     function createParticles() {
@@ -763,6 +787,22 @@
              animate(); // Start the wave animation
         }
     });
+
+    // Back to top button functionality
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    if (backToTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                backToTopBtn.style.display = 'block';
+            } else {
+                backToTopBtn.style.display = 'none';
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
   </script>
 </body>
 </html>
