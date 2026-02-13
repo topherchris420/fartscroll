@@ -40,16 +40,6 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: -1;
-    }
-
-    #shaderCanvas {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -3;
-      pointer-events: none;
       opacity: 0.96;
     }
 
@@ -162,11 +152,6 @@
       border-radius: 14px;
       background: linear-gradient(180deg, rgba(8, 12, 20, .8), rgba(20, 32, 54, 0.65));
       box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.15);
-    }
-
-    #waveCanvas {
-      position: relative;
-      z-index: 2;
     }
 
     .controls label {
@@ -372,101 +357,6 @@
 
   <script src="https://unpkg.com/three@0.169.0/build/three.min.js"></script>
   <script>
-    function initWebGLShader() {
-      const shaderCanvas = document.getElementById('shaderCanvas');
-      if (!shaderCanvas || !window.THREE) return;
-
-      const scene = new THREE.Scene();
-      const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-      const renderer = new THREE.WebGLRenderer({ canvas: shaderCanvas, antialias: true, alpha: true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-
-      const uniforms = {
-        resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-        time: { value: 0.0 },
-        xScale: { value: 2.4 },
-        yScale: { value: 0.36 },
-        distortion: { value: 0.62 },
-      };
-
-      const geometry = new THREE.BufferGeometry();
-      geometry.setAttribute(
-        'position',
-        new THREE.BufferAttribute(
-          new Float32Array([
-            -1.0, -1.0, 0.0,
-             1.0, -1.0, 0.0,
-            -1.0,  1.0, 0.0,
-             1.0, -1.0, 0.0,
-            -1.0,  1.0, 0.0,
-             1.0,  1.0, 0.0,
-          ]),
-          3,
-        ),
-      );
-
-      const material = new THREE.RawShaderMaterial({
-        uniforms,
-        transparent: true,
-        vertexShader: `
-          precision highp float;
-          attribute vec3 position;
-          void main() {
-            gl_Position = vec4(position, 1.0);
-          }
-        `,
-        fragmentShader: `
-          precision highp float;
-          uniform vec2 resolution;
-          uniform float time;
-          uniform float xScale;
-          uniform float yScale;
-          uniform float distortion;
-
-          void main() {
-            vec2 p = (gl_FragCoord.xy * 2.0 - resolution) / min(resolution.x, resolution.y);
-
-            float d = length(p) * distortion;
-            float wave = sin((p.x + time * 0.22) * xScale) * yScale;
-
-            float rx = p.x * (1.0 + d * 0.9);
-            float gx = p.x;
-            float bx = p.x * (1.0 - d * 0.9);
-
-            float r = 0.036 / abs(p.y + sin((rx + time) * xScale) * yScale - wave);
-            float g = 0.038 / abs(p.y + sin((gx + time) * xScale) * yScale - wave);
-            float b = 0.040 / abs(p.y + sin((bx + time) * xScale) * yScale - wave);
-
-            vec3 color = vec3(r, g, b);
-            float glow = smoothstep(0.0, 0.75, max(color.r, max(color.g, color.b)));
-            vec3 toned = mix(color, vec3(0.07, 0.12, 0.22), 0.35);
-            gl_FragColor = vec4(toned, min(1.0, glow));
-          }
-        `,
-      });
-
-      const mesh = new THREE.Mesh(geometry, material);
-      scene.add(mesh);
-
-      const handleResize = () => {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        renderer.setSize(width, height, false);
-        uniforms.resolution.value.set(width, height);
-      };
-
-      handleResize();
-      window.addEventListener('resize', handleResize);
-
-      const animateShader = () => {
-        uniforms.time.value += 0.01;
-        renderer.render(scene, camera);
-        requestAnimationFrame(animateShader);
-      };
-
-      animateShader();
-    }
-
     function createParticles() {
       const particlesContainer = document.getElementById('particles');
       if (!particlesContainer) return;
@@ -551,7 +441,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-      initWebGLShader();
       createParticles();
       if (ctx && canvas) animate();
     });
