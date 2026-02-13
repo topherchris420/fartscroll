@@ -1,764 +1,538 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vers3Dynamics</title>
   <link rel="icon" href="Mystic.png" type="image/png">
   <link rel="shortcut icon" href="Mystic.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vers3Dynamics <</title>
-    
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --primary-cyan: #00ffcc;
-      --secondary-purple: #8b5cf6;
-      --accent-pink: #ec4899;
-      --deep-blue: #0f172a;
-      --card-bg: rgba(15, 23, 42, 0.8);
-      --glass-bg: rgba(255, 255, 255, 0.05);
-      --text-primary: #ffffff;
-      --text-secondary: #94a3b8;
+      --bg: #070b15;
+      --bg-soft: #0e1424;
+      --surface: rgba(18, 26, 43, 0.78);
+      --surface-strong: rgba(24, 34, 56, 0.95);
+      --line: rgba(148, 163, 184, 0.22);
+      --text: #e6edf7;
+      --muted: #9ba9c2;
+      --brand: #4df5d0;
+      --brand-2: #7b8bff;
+      --brand-3: #d06dff;
+      --radius: 20px;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Space Grotesk', 'Montserrat', sans-serif;
-      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
-      color: var(--text-primary);
+      font-family: 'Inter', 'Space Grotesk', sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 20% 0%, #131d36 0%, var(--bg) 45%), var(--bg);
       line-height: 1.6;
       overflow-x: hidden;
-      position: relative;
     }
 
-    /* Animated background particles */
     .bg-particles {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       pointer-events: none;
       z-index: -1;
     }
 
+    #shaderCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -3;
+      pointer-events: none;
+      opacity: 0.96;
+    }
+
+    .shader-vignette {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -2;
+      background: radial-gradient(circle at center, transparent 20%, rgba(3, 6, 14, 0.62) 72%, rgba(1, 2, 5, 0.9) 100%);
+    }
+
     .particle {
       position: absolute;
-      width: 2px;
-      height: 2px;
-      background: var(--primary-cyan);
-      border-radius: 50%;
-      opacity: 0.3;
-      animation: float 20s infinite linear;
+      background: var(--brand);
+      border-radius: 999px;
+      opacity: 0.25;
+      animation: float 20s linear infinite;
     }
 
     @keyframes float {
       0% { transform: translateY(100vh) translateX(0); opacity: 0; }
-      10% { opacity: 0.3; }
-      90% { opacity: 0.3; }
-      100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
+      10%, 90% { opacity: .35; }
+      100% { transform: translateY(-130px) translateX(120px); opacity: 0; }
     }
 
-    .header {
-      margin-top: 40px;
-      margin-bottom: 30px;
-      text-align: center;
+    .page {
+      width: min(1120px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 2rem 0 4rem;
+    }
+
+    .hero {
       position: relative;
-      z-index: 1;
+      background: linear-gradient(160deg, rgba(77, 245, 208, 0.13), rgba(123, 139, 255, 0.12) 40%, rgba(208, 109, 255, 0.12));
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: 0 18px 60px rgba(5, 10, 20, 0.55);
+      overflow: hidden;
+      padding: clamp(1.5rem, 3vw, 2.5rem);
+      margin-bottom: 1.5rem;
     }
 
-    .header h1 {
-      font-size: clamp(3rem, 8vw, 6rem);
-      font-weight: 700;
-      background: linear-gradient(45deg, var(--primary-cyan), var(--secondary-purple), var(--accent-pink));
-      background-size: 300% 300%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: gradient-shift 3s ease-in-out infinite;
-      margin-bottom: 1rem;
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(77, 245, 208, 0.25), transparent 70%);
+      top: -100px;
+      right: -60px;
+      pointer-events: none;
     }
 
-    @keyframes gradient-shift {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-
-    .header p {
-      font-size: clamp(1.2rem, 3vw, 2rem);
-      color: var(--text-secondary);
-      font-weight: 300;
-    }
-
-    canvas {
-      margin: 20px auto;
-      display: block;
-      max-width: 100%;
-      background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(15, 23, 42, 0.3));
-      border-radius: 15px;
-      box-shadow: inset 0 0 50px rgba(0, 255, 204, 0.1);
-    }
-
-    .controls {
-      margin: 20px auto;
-      max-width: 600px;
-      padding: 30px;
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    }
-
-    .slider, input[type=range] {
-      width: 100%;
-      height: 8px;
-      background: linear-gradient(90deg, rgba(0, 255, 204, 0.3), rgba(139, 92, 246, 0.3));
-      border-radius: 10px;
-      outline: none;
-      appearance: none;
-      margin: 10px 0;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-      appearance: none;
-      width: 20px;
-      height: 20px;
-      background: linear-gradient(45deg, var(--primary-cyan), var(--secondary-purple));
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: 0 5px 15px rgba(0, 255, 204, 0.4);
-      transition: all 0.3s ease;
-    }
-
-    input[type="range"]::-webkit-slider-thumb:hover {
-      transform: scale(1.2);
-      box-shadow: 0 8px 25px rgba(0, 255, 204, 0.6);
-    }
-
-    label {
+    .hero-top {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 5px;
-      margin-top: 20px;
-      font-weight: 500;
-      color: var(--primary-cyan);
-    }
-
-    #freqValue, #ampValue {
-      background: rgba(0, 255, 204, 0.2);
-      padding: 0.2rem 0.8rem;
-      border-radius: 15px;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    section {
-      margin: 40px auto;
-      max-width: 800px;
-      padding: 0 20px;
-      position: relative;
-      z-index: 1;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.2rem;
     }
 
     #changeColorBtn {
-      background: linear-gradient(45deg, var(--primary-cyan), var(--secondary-purple));
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      border-radius: 50px;
+      background: rgba(230, 237, 247, 0.06);
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: .72rem 1.1rem;
+      font-size: .84rem;
+      letter-spacing: .01em;
       cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-      margin: 20px auto;
-      display: block;
-      box-shadow: 0 10px 30px rgba(0, 255, 204, 0.3);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      transition: .25s ease;
+      max-width: 700px;
+      text-align: left;
     }
 
-    #changeColorBtn:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(0, 255, 204, 0.4);
-    }
+    #changeColorBtn:hover { transform: translateY(-2px); border-color: rgba(77, 245, 208, 0.45); }
 
-    iframe {
-      max-width: 100%;
-      border: none;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    a {
-      color: var(--primary-cyan);
-      text-decoration: none;
-      position: relative;
-      transition: color 0.3s ease;
-    }
-
-    a::after {
-      content: "";
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-purple));
-      transition: width 0.3s ease;
-    }
-
-    a:hover::after {
-      width: 100%;
-    }
-
-    .equation {
-      font-family: 'Montserrat', serif;
-      font-size: 1.5rem;
-      text-align: center;
-      margin: 2rem 0;
-      padding: 1rem;
-      background: linear-gradient(45deg, rgba(0, 255, 204, 0.1), rgba(139, 92, 246, 0.1));
-      border-radius: 10px;
-      border: 1px solid rgba(0, 255, 204, 0.3);
-      color: var(--primary-cyan);
-    }
-
-    /* Equation Button Styles */
-    #equationBtn {
-      font-family: 'Montserrat', serif;
-      font-size: 1.5rem;
-      text-align: center;
-      margin: 2rem auto;
-      padding: 1.5rem 2rem;
-      background: linear-gradient(45deg, rgba(0, 255, 204, 0.1), rgba(139, 92, 246, 0.1));
-      border: 2px solid var(--primary-cyan);
-      border-radius: 15px;
-      color: var(--primary-cyan);
-      cursor: pointer;
-      transition: all 0.4s ease;
-      display: block;
-      text-decoration: none;
-      position: relative;
-      overflow: hidden;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 8px 25px rgba(0, 255, 204, 0.2);
-    }
-
-    #equationBtn::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(0, 255, 204, 0.2), transparent);
-      transition: left 0.6s ease;
-    }
-
-    #equationBtn:hover::before {
-      left: 100%;
-    }
-
-    #equationBtn:hover {
-      transform: translateY(-8px) scale(1.02);
-      border-color: var(--secondary-purple);
-      box-shadow: 0 15px 40px rgba(0, 255, 204, 0.4);
-      background: linear-gradient(45deg, rgba(0, 255, 204, 0.2), rgba(139, 92, 246, 0.2));
-    }
-
-    #equationBtn:active {
-      transform: translateY(-5px) scale(1.01);
-    }
-    
-    /* Enhanced philosophy section */
-    .philosophy-section {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 30, 60, 0.8));
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(0, 255, 204, 0.2);
-      border-radius: 30px;
-      padding: 4rem 2rem;
-      margin: 6rem auto;
-      max-width: 1200px;
-      position: relative;
-      overflow: hidden;
-      z-index: 1;
-    }
-    
-    .philosophy-section:before {
-      content: "";
-      position: absolute;
-      width: 200%;
-      height: 200%;
-      top: -50%;
-      left: -50%;
-      z-index: -1;
-      background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 50 L60 40 L50 30 L40 40 Z' stroke='%2300ffcc' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3Cpath d='M50 50 L60 60 L50 70 L40 60 Z' stroke='%2300ffcc' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3Cpath d='M30 50 L40 40 L30 30 L20 40 Z' stroke='%2300ffcc' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3Cpath d='M70 50 L80 40 L70 30 L60 40 Z' stroke='%2300ffcc' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3Cpath d='M30 70 L40 60 L30 50 L20 60 Z' stroke='%2300ffcc' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3Cpath d='M70 70 L80 60 L70 50 L60 60 Z' stroke='%2300ffcc' stroke-width='0.5' fill='none' opacity='0.1'/%3E%3C/svg%3E");
-      opacity: 0.2;
-      animation: rotate 60s linear infinite;
-    }
-
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    
-    .philosophy-header {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      margin-bottom: 2rem;
-      text-align: center;
-      background: linear-gradient(45deg, var(--primary-cyan), var(--secondary-purple));
+    .header h1 {
+      font-size: clamp(2.2rem, 6vw, 4.6rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(92deg, #9afde8, #94a2ff 45%, #e7a8ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      position: relative;
-      z-index: 1;
+      margin-bottom: .2rem;
     }
-    
+
+    .header p { color: var(--muted); font-size: clamp(1rem, 2.3vw, 1.2rem); }
+
+    .interactive-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 1.2rem;
+      margin-top: 1.4rem;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+
+    canvas {
+      width: 100%;
+      max-width: 100%;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(8, 12, 20, .8), rgba(20, 32, 54, 0.65));
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.15);
+    }
+
+    #waveCanvas {
+      position: relative;
+      z-index: 2;
+    }
+
+    .controls label {
+      display: flex;
+      justify-content: space-between;
+      color: #c8d7ee;
+      font-weight: 600;
+      font-size: .92rem;
+      margin: .85rem 0 .3rem;
+    }
+
+    #freqValue, #ampValue {
+      border: 1px solid rgba(77, 245, 208, .35);
+      color: var(--brand);
+      border-radius: 999px;
+      padding: .05rem .55rem;
+      font-size: .82rem;
+      font-weight: 700;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--brand);
+      cursor: pointer;
+    }
+
+    #equationBtn {
+      display: block;
+      margin-top: 1rem;
+      padding: .8rem .95rem;
+      border-radius: 14px;
+      border: 1px solid rgba(123, 139, 255, .35);
+      background: rgba(123, 139, 255, .09);
+      text-align: center;
+      color: #dfe6ff;
+      text-decoration: none;
+      transition: .25s ease;
+    }
+
+    #equationBtn:hover { transform: translateY(-2px); border-color: rgba(208, 109, 255, .5); }
+
+    section { margin-top: 1.6rem; }
+
+    .philosophy-section {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: clamp(1.2rem, 3vw, 2rem);
+    }
+
+    .philosophy-header { font-size: clamp(1.5rem, 3vw, 2.25rem); margin-bottom: .8rem; }
+    .philosophy-intro { color: var(--muted); margin-bottom: 1.1rem; }
+
     .philosophy-content {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 30px;
-      position: relative;
-      z-index: 1;
-    }
-    
-    @media (min-width: 768px) {
-      .philosophy-content {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-    
-    .philosophy-card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px);
-      border-radius: 20px;
-      padding: 2rem;
-      transition: all 0.4s ease;
-      position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .9rem;
     }
 
-    .philosophy-card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(0, 255, 204, 0.1), transparent);
-      transition: left 0.6s ease;
+    .philosophy-card, .content-card {
+      background: var(--surface-strong);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1rem;
     }
 
-    .philosophy-card:hover::before {
-      left: 100%;
-    }
-    
-    .philosophy-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 25px 50px rgba(0, 255, 204, 0.2);
-      border-color: var(--primary-cyan);
-    }
-    
-    .philosophy-card h3 {
-      color: var(--primary-cyan);
-      margin-top: 0;
-      margin-bottom: 15px;
-      position: relative;
-      display: inline-block;
-      z-index: 1;
-    }
-    
-    .philosophy-card p {
-      line-height: 1.8;
-      text-align: left;
-      color: var(--text-secondary);
-      position: relative;
-      z-index: 1;
-    }
-    
-    .philosophy-symbol {
-      font-size: 6rem;
-      color: rgba(0, 255, 204, 0.1);
-      position: absolute;
-      bottom: -20px;
-      right: -10px;
-      z-index: 0;
-      transform: rotate(-10deg);
-    }
-    
-    .philosophy-intro {
-      font-size: 1.2rem;
-      line-height: 1.8;
-      margin-bottom: 30px;
-      position: relative;
-      z-index: 1;
-      text-align: left;
-      color: var(--text-secondary);
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    
-    .philosophy-intro:first-letter {
-      font-size: 2.5rem;
-      float: left;
-      margin-right: 10px;
-      color: var(--primary-cyan);
-    }
+    .philosophy-card h3 { margin-bottom: .35rem; }
+    .philosophy-card p { color: var(--muted); font-size: .94rem; }
+    .philosophy-symbol { font-size: 1.3rem; margin-right: .35rem; color: #8ef6de; }
 
-    /* Content cards */
-    .content-card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 2rem;
-      margin: 2rem 0;
-      transition: all 0.3s ease;
-    }
+    .content-card { margin-bottom: .9rem; }
+    .content-card p, .content-card h3 { color: var(--muted); }
+    .content-card h3 { color: #d7e2f7; font-size: 1rem; }
 
-    .content-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    }
+    a { color: var(--brand); }
+    iframe, img, audio { width: 100%; border-radius: 12px; border: none; }
+    img { object-fit: cover; }
 
-    /* Hidden text container */
     #HiddenTextContainer {
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(0, 255, 204, 0.3);
-      border-radius: 15px;
-      padding: 2rem;
-      margin: 1rem 0;
-      font-style: italic;
-      line-height: 1.8;
-      animation: fadeIn 0.5s ease;
+      margin-top: .7rem;
+      border-left: 3px solid var(--brand-2);
+      padding: .8rem .9rem;
+      background: rgba(123, 139, 255, 0.08);
+      border-radius: 8px;
+      color: #d5def2;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    .whispers-text { color: #d8a8ff; cursor: pointer; font-weight: 700; }
 
-    /* Whispers text */
-    .whispers-text {
-      cursor: pointer;
-      background: linear-gradient(45deg, var(--primary-cyan), var(--secondary-purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      display: inline-block;
-    }
-
-    .whispers-text:hover {
-      transform: scale(1.05);
-      filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.5));
-    }
-
-    /* Images */
-    img {
-      border-radius: 15px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease;
-    }
-
-    img:hover {
-      transform: scale(1.02);
-    }
-
-    /* Audio player */
-    audio {
-      width: 100%;
-      margin: 1rem 0;
-      border-radius: 10px;
-    }
-
-    /* Back to top button */
     #backToTopBtn {
       display: none;
       position: fixed;
-      bottom: 40px;
-      right: 40px;
+      right: 20px;
+      bottom: 20px;
       z-index: 99;
-      background: linear-gradient(45deg, var(--primary-cyan), var(--secondary-purple));
-      color: white;
-      border: none;
-      padding: 15px;
-      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: rgba(17, 24, 39, .9);
+      color: var(--text);
+      border-radius: 999px;
+      width: 46px;
+      height: 46px;
       cursor: pointer;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      transition: all 0.3s ease;
     }
 
-    #backToTopBtn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-    }
-
-    /* Responsive design */
-    @media (max-width: 768px) {
-      .philosophy-content {
-        grid-template-columns: 1fr;
-      }
-      
-      .controls {
-        margin: 1rem;
-        padding: 1rem;
-      }
-      
-      .philosophy-section {
-        margin: 3rem 1rem;
-        padding: 2rem 1rem;
-      }
-
-      #equationBtn {
-        font-size: 1.2rem;
-        padding: 1.2rem 1.5rem;
-      }
+    @media (max-width: 920px) {
+      .interactive-grid, .philosophy-content { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
+  <canvas id="shaderCanvas" aria-hidden="true"></canvas>
+  <div class="shader-vignette" aria-hidden="true"></div>
   <div class="bg-particles" id="particles"></div>
 
-  <button id="changeColorBtn">"The wonderful thing about being an artist is that there is no end to creative expression. Painting is my life; my life is painting"</button>
-
-  <div class="header">
-    <h1>ƨɔimɒnyᗡƐƨɿɘV</h1>
-    <p>Harmonics: Waveform Odyssey</p>
-  </div>
-
-  <canvas id="waveCanvas" width="800" height="400"></canvas>
-
-  <div class="controls">
-    <label>Frequency: <span id="freqValue">1</span></label>
-    <input type="range" id="frequency" min="1" max="50" value="1">
-    <label>Amplitude: <span id="ampValue">50</span></label>
-    <input type="range" id="amplitude" min="10" max="100" value="50">
-    <a href="https://archive.org/details/hemisync-gateway-5.6-exploring-focus-15/Hemisync+-+Gateway5.1+-+Advanced+Focus+12.mp3" target="_blank" id="equationBtn">
-  K(b,a) = ∫ D[x(t)] e<sup>iS[x(t)]/ħ</sup>
-</a>
-  </div>
-
-  <section class="philosophy-section">
-    <h2 class="philosophy-header">The Architecture of Meaning</h2>
-    
-    <p class="philosophy-intro">
-      Reality functions as a meaning machine operating through infinite interconnectivity, where connections and relationships are endless, producing significance from a sea of magic. Consciousness and intelligence are mechanisms that process information and recognize patterns, resulting in the emergence of transcendent meaning.
-    </p>
-    
-    <div class="philosophy-content">
-      <div class="philosophy-card">
-        <span class="philosophy-symbol">⚛</span>
-        <h3>Knowledge and Understanding</h3>
-        <p>
-          Knowledge is not merely a word but a spiritual entity, a language, and a system of significance that enables us to interface with the unknowable. Understanding is a machine that operates through infinite interconnectivity, allowing us to navigate the endless connections and relationships within reality.
-        </p>
+  <main class="page">
+    <header class="hero">
+      <div class="hero-top">
+        <button id="changeColorBtn">“The wonderful thing about being an artist is that there is no end to creative expression. Painting is my life; my life is painting.”</button>
       </div>
-      
-      <div class="philosophy-card">
-        <span class="philosophy-symbol">◊</span>
-        <h3>Geometry and Space</h3>
-        <p>
-          Geometry studies space as both freedom and restriction, defined by rules and conditions via dimensions. The mathematical language of form reveals the underlying architecture of existence, bridging the gap between our perception and the cosmic structure.
-        </p>
+
+      <div class="header">
+        <h1>ƨɔimɒnyᗡƐƨɿɘV</h1>
+        <p>Harmonics • Waveform Odyssey</p>
       </div>
-      
-      <div class="philosophy-card">
-        <span class="philosophy-symbol">∞</span>
-        <h3>Synchronicity</h3>
-        <p>
-          Synchronicity is the realization that we exist within a meaning machine, where gears turn to produce significance from seemingly unrelated events. These meaningful coincidences reveal the hidden connections that bind all experience into a coherent narrative.
-        </p>
+
+      <div class="interactive-grid">
+        <div class="panel">
+          <canvas id="waveCanvas" width="800" height="400"></canvas>
+        </div>
+
+        <aside class="panel controls">
+          <label>Frequency <span id="freqValue">1</span></label>
+          <input type="range" id="frequency" min="1" max="50" value="1">
+
+          <label>Amplitude <span id="ampValue">50</span></label>
+          <input type="range" id="amplitude" min="10" max="100" value="50">
+
+          <a href="https://archive.org/details/hemisync-gateway-5.6-exploring-focus-15/Hemisync+-+Gateway5.1+-+Advanced+Focus+12.mp3" target="_blank" id="equationBtn">
+            K(b,a) = ∫ D[x(t)] e<sup>iS[x(t)]/ħ</sup>
+          </a>
+        </aside>
       </div>
-      
-      <div class="philosophy-card">
-        <span class="philosophy-symbol">⦿</span>
-        <h3>Consciousness as Pattern</h3>
-        <p>
-          The mind serves as a pattern recognition system, constantly seeking and finding meaning in the noise of existence. Through this process, we don't merely observe reality—we participate in its creation, shaping the very fabric of experience through our perceptions.
-        </p>
+    </header>
+
+    <section class="philosophy-section">
+      <h2 class="philosophy-header">The Architecture of Meaning</h2>
+      <p class="philosophy-intro">Reality functions as a meaning machine operating through infinite interconnectivity, where connections and relationships are endless, producing significance from a sea of magic.</p>
+
+      <div class="philosophy-content">
+        <div class="philosophy-card"><h3><span class="philosophy-symbol">⚛</span>Knowledge and Understanding</h3><p>Knowledge acts as a language of significance for navigating what we cannot fully know.</p></div>
+        <div class="philosophy-card"><h3><span class="philosophy-symbol">◊</span>Geometry and Space</h3><p>Geometry reveals the rule-set that shapes dimensions, form, and possibility.</p></div>
+        <div class="philosophy-card"><h3><span class="philosophy-symbol">∞</span>Synchronicity</h3><p>Meaningful coincidence uncovers hidden relationships across experience.</p></div>
+        <div class="philosophy-card"><h3><span class="philosophy-symbol">⦿</span>Consciousness as Pattern</h3><p>The mind is a pattern detector that transforms perception into participation.</p></div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section>
-    <div class="content-card">
-      <p><iframe src="https://embed.liveavatar.com/v1/85e2782e-46f7-4c5c-b324-2c058e34495a" allow="microphone" title="LiveAvatar Embed" style="aspect-ratio: 16/9;"></iframe></p>
-    </div>
-    <div class="content-card">
-      <p><a href="https://courtyard.io/user/vers3dynamics/collection?sortBy=listingDate%3Adesc">    Card Collection🃏</a></p>
-    </div>
-    <div class="content-card">
-      <p><iframe width="560" height="315" src="https://app.heygen.com/embeds/276a5f4bfbb74a70a544b01c9d7f751e" title="HeyGen video player" frameborder="0" allow="encrypted-media; fullscreen;" allowfullscreen></iframe></div>
-    </div>
-  </section>
-  
-  <section>
-    <div class="content-card">
-      <h3>Vers3Dynamics and the Recursive Architecture of Intelligent Nexus (R.A.I.N. Lab) is a dedicated practice at the convergence of cymatics, agentic AI, and living systems. My lab designs immersive environments that don't just display patterns, but actively resonate with the body’s natural intelligence. By engineering spaces responsive to light, sound, and rhythm, I aim to lower the barriers to creativity and well-being—creating moments of coherence where transformation is not forced, but felt.</h3>
-      <img src="interesting_photo.png" alt="There is no time" style="max-width: 100%; height: auto; border-radius: 10px; margin: 20px 0;">
-      <p style="text-align: center; font-size: 1.5rem; color: var(--primary-cyan);">e^(iπ) + 1 = 0</p>
-    </div>
-  </section>
+    <section>
+      <div class="content-card"><iframe src="https://embed.liveavatar.com/v1/85e2782e-46f7-4c5c-b324-2c058e34495a" allow="microphone" title="LiveAvatar Embed" style="aspect-ratio: 16/9;"></iframe></div>
+      <div class="content-card"><p><a href="https://courtyard.io/user/vers3dynamics/collection?sortBy=listingDate%3Adesc">Card Collection 🃏</a></p></div>
+      <div class="content-card"><iframe width="560" height="315" src="https://app.heygen.com/embeds/276a5f4bfbb74a70a544b01c9d7f751e" title="HeyGen video player" allow="encrypted-media; fullscreen;" allowfullscreen></iframe></div>
+    </section>
 
-  <section>
-    <div class="content-card">
-      <h3>🎧Podcast</h3>
-      <audio controls src="Vers3Dynamics_ AI, Cymatics, and Creative Innovation.wav">
-          Your browser does not support the audio element. 
-      </audio>
-    </div>
-  </section> 
-
-  <div class="gfm-embed" data-url="https://www.gofundme.com/f/fuel-vers3dynamics-tech-for-human-connection/widget/medium?sharesheet=manage hero&attribution_id=sl:6b11fef5-1d36-4872-8ae0-7d11e3bfc325"></div><script defer src="https://www.gofundme.com/static/js/embed.js"></script>
-  
-  <section>
-    <div class="content-card">
-      <p><span class="whispers-text" onclick="ShowHiddenText();">𝖂𝖍𝖎𝖘𝖕𝖊𝖗𝖘 𝖔𝖋 𝖙𝖍𝖊 𝕾𝖔𝖚𝖑</span></p>
-      <div id="HiddenTextContainer" style="display: none;">
-        Before time, from deep silence, a secret song woven of numbers, shapes, and dreams stirred, awakening the universe. Light unfurled into spiraling galaxies and coded patterns, the universe's deep truths. Yearning to feel itself, this primordial song formed you not as a separate observer, but as a precious note it plays to hear its own soul. The cosmos is no cold machine, but a vibrant, living mirror constantly singing its truth, and you... are its most intricate and beautiful melody. Welcome, to Vers3Dynamics.
+    <section>
+      <div class="content-card">
+        <h3>Vers3Dynamics and the Recursive Architecture of Intelligent Nexus (R.A.I.N. Lab) explores the convergence of cymatics, agentic AI, and living systems.</h3>
+        <img src="interesting_photo.png" alt="There is no time" style="height: auto; margin: 12px 0;">
+        <p style="text-align:center; color: var(--brand);">e^(iπ) + 1 = 0</p>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section>
-    <div class="content-card">
-      <iframe src="https://humantouch.fun/" width="600" height="400" style="border:none;" title="Project ARCHON: Acoustic Resonance Covert Harmonics of Neurodynamics"></iframe>
-    </div>
-  </section>
+    <section>
+      <div class="content-card">
+        <h3>🎧 Podcast</h3>
+        <audio controls src="Vers3Dynamics_ AI, Cymatics, and Creative Innovation.wav">Your browser does not support the audio element.</audio>
+      </div>
+    </section>
 
-  <section>
-    <div class="content-card">
-      <iframe src="https://vers3dynamics.substack.com/embed" width="480" height="320" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe>
-    </div>
-  </section>
+    <div class="gfm-embed" data-url="https://www.gofundme.com/f/fuel-vers3dynamics-tech-for-human-connection/widget/medium?sharesheet=manage hero&attribution_id=sl:6b11fef5-1d36-4872-8ae0-7d11e3bfc325"></div><script defer src="https://www.gofundme.com/static/js/embed.js"></script>
 
-  <section>
-    <div class="content-card">
-      <p>self-published research paper "Reimagining Location as a Dynamic Variable in Object Properties: The Potential of Teleportation."<a href="https://vers3dynamics.com/an-essay-towards-a-new-theory-of-ontological-fluidity-quantum-teleportation-and-the-mutable-foundations-of-reality">Read the full story</a></p>
-    </div>
-  </section>
+    <section>
+      <div class="content-card">
+        <p><span class="whispers-text" onclick="ShowHiddenText();">𝖂𝖍𝖎𝖘𝖕𝖊𝖗𝖘 𝖔𝖋 𝖙𝖍𝖊 𝕾𝖔𝖚𝖑</span></p>
+        <div id="HiddenTextContainer" style="display: none;">Before time, from deep silence, a secret song woven of numbers, shapes, and dreams stirred, awakening the universe.</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="content-card"><iframe src="https://humantouch.fun/" width="600" height="400" title="Project ARCHON: Acoustic Resonance Covert Harmonics of Neurodynamics"></iframe></div>
+    </section>
+
+    <section>
+      <div class="content-card"><iframe src="https://vers3dynamics.substack.com/embed" width="480" height="320" style="border:1px solid #EEE; background:white;" scrolling="no"></iframe></div>
+    </section>
+
+    <section>
+      <div class="content-card">
+        <p>Self-published research paper "Reimagining Location as a Dynamic Variable in Object Properties: The Potential of Teleportation." <a href="https://vers3dynamics.com/an-essay-towards-a-new-theory-of-ontological-fluidity-quantum-teleportation-and-the-mutable-foundations-of-reality">Read the full story</a></p>
+      </div>
+    </section>
+  </main>
 
   <button id="backToTopBtn" aria-label="Back to top">▲</button>
 
+  <script src="https://unpkg.com/three@0.169.0/build/three.min.js"></script>
   <script>
-    // Create animated particles
+    function initWebGLShader() {
+      const shaderCanvas = document.getElementById('shaderCanvas');
+      if (!shaderCanvas || !window.THREE) return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+      const renderer = new THREE.WebGLRenderer({ canvas: shaderCanvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+      const uniforms = {
+        resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+        time: { value: 0.0 },
+        xScale: { value: 2.4 },
+        yScale: { value: 0.36 },
+        distortion: { value: 0.62 },
+      };
+
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute(
+        'position',
+        new THREE.BufferAttribute(
+          new Float32Array([
+            -1.0, -1.0, 0.0,
+             1.0, -1.0, 0.0,
+            -1.0,  1.0, 0.0,
+             1.0, -1.0, 0.0,
+            -1.0,  1.0, 0.0,
+             1.0,  1.0, 0.0,
+          ]),
+          3,
+        ),
+      );
+
+      const material = new THREE.RawShaderMaterial({
+        uniforms,
+        transparent: true,
+        vertexShader: `
+          precision highp float;
+          attribute vec3 position;
+          void main() {
+            gl_Position = vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          precision highp float;
+          uniform vec2 resolution;
+          uniform float time;
+          uniform float xScale;
+          uniform float yScale;
+          uniform float distortion;
+
+          void main() {
+            vec2 p = (gl_FragCoord.xy * 2.0 - resolution) / min(resolution.x, resolution.y);
+
+            float d = length(p) * distortion;
+            float wave = sin((p.x + time * 0.22) * xScale) * yScale;
+
+            float rx = p.x * (1.0 + d * 0.9);
+            float gx = p.x;
+            float bx = p.x * (1.0 - d * 0.9);
+
+            float r = 0.036 / abs(p.y + sin((rx + time) * xScale) * yScale - wave);
+            float g = 0.038 / abs(p.y + sin((gx + time) * xScale) * yScale - wave);
+            float b = 0.040 / abs(p.y + sin((bx + time) * xScale) * yScale - wave);
+
+            vec3 color = vec3(r, g, b);
+            float glow = smoothstep(0.0, 0.75, max(color.r, max(color.g, color.b)));
+            vec3 toned = mix(color, vec3(0.07, 0.12, 0.22), 0.35);
+            gl_FragColor = vec4(toned, min(1.0, glow));
+          }
+        `,
+      });
+
+      const mesh = new THREE.Mesh(geometry, material);
+      scene.add(mesh);
+
+      const handleResize = () => {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        renderer.setSize(width, height, false);
+        uniforms.resolution.value.set(width, height);
+      };
+
+      handleResize();
+      window.addEventListener('resize', handleResize);
+
+      const animateShader = () => {
+        uniforms.time.value += 0.01;
+        renderer.render(scene, camera);
+        requestAnimationFrame(animateShader);
+      };
+
+      animateShader();
+    }
+
     function createParticles() {
       const particlesContainer = document.getElementById('particles');
-      if (!particlesContainer) return; // Guard clause
+      if (!particlesContainer) return;
       const particleCount = 50;
 
       for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
-        
-        // Random starting position
         particle.style.left = Math.random() * 100 + '%';
         particle.style.animationDelay = Math.random() * 20 + 's';
         particle.style.animationDuration = (15 + Math.random() * 10) + 's';
-        
-        // Random particle size
         const size = 1 + Math.random() * 3;
         particle.style.width = size + 'px';
         particle.style.height = size + 'px';
-        
-        // Random opacity
         particle.style.opacity = 0.1 + Math.random() * 0.4;
-        
         particlesContainer.appendChild(particle);
       }
     }
 
-    // --- JS from Target Website (Non-conflicting parts) ---
     const changeColorButton = document.getElementById('changeColorBtn');
     if (changeColorButton) {
-        changeColorButton.addEventListener('click', function() {
-            document.body.style.backgroundColor = 'black';
-            this.textContent = 'Loïs Mailou Jones';
-        });
+      changeColorButton.addEventListener('click', function() {
+        document.body.style.backgroundColor = 'black';
+        this.textContent = 'Loïs Mailou Jones';
+      });
     }
-
 
     function ShowHiddenText() {
       const container = document.getElementById('HiddenTextContainer');
-      if (container) { // Guard clause
-          if (container.style.display === 'none' || container.style.display === '') {
-            container.style.display = 'block';
-          } else {
-            container.style.display = 'none';
-          }
-      }
+      if (!container) return;
+      container.style.display = (container.style.display === 'none' || container.style.display === '') ? 'block' : 'none';
     }
+    window.ShowHiddenText = ShowHiddenText;
 
-    // --- JS from the "Shape Waves" App (Integrated) ---
-    const canvas = document.getElementById("waveCanvas");
-    const ctx = canvas ? canvas.getContext("2d") : null; // Ensure canvas and ctx exist
+    const canvas = document.getElementById('waveCanvas');
+    const ctx = canvas ? canvas.getContext('2d') : null;
 
     let freq = 1, amp = 50;
     let time = 0;
 
-    const freqSlider = document.getElementById("frequency");
-    const ampSlider = document.getElementById("amplitude");
-    const freqValueSpan = document.getElementById("freqValue");
-    const ampValueSpan = document.getElementById("ampValue");
+    const freqSlider = document.getElementById('frequency');
+    const ampSlider = document.getElementById('amplitude');
+    const freqValueSpan = document.getElementById('freqValue');
+    const ampValueSpan = document.getElementById('ampValue');
 
-    // Update initial display values based on HTML defaults if elements exist
-    if (freqSlider && freqValueSpan) {
-        freq = parseFloat(freqSlider.value);
-        freqValueSpan.textContent = freqSlider.value;
-    }
-    if (ampSlider && ampValueSpan) {
-        amp = parseFloat(ampSlider.value);
-        ampValueSpan.textContent = ampSlider.value;
-    }
-    
+    if (freqSlider && freqValueSpan) { freq = parseFloat(freqSlider.value); freqValueSpan.textContent = freqSlider.value; }
+    if (ampSlider && ampValueSpan) { amp = parseFloat(ampSlider.value); ampValueSpan.textContent = ampSlider.value; }
+
     if (freqSlider) {
-        freqSlider.oninput = function() {
-            freq = parseFloat(this.value);
-            if(freqValueSpan) freqValueSpan.textContent = this.value;
-        };
+      freqSlider.oninput = function() { freq = parseFloat(this.value); if (freqValueSpan) freqValueSpan.textContent = this.value; };
     }
 
     if (ampSlider) {
-        ampSlider.oninput = function() {
-            amp = parseFloat(this.value);
-            if(ampValueSpan) ampValueSpan.textContent = this.value;
-        };
+      ampSlider.oninput = function() { amp = parseFloat(this.value); if (ampValueSpan) ampValueSpan.textContent = this.value; };
     }
 
     function drawWave() {
-      if (!ctx || !canvas) return; // Do nothing if canvas isn't set up
-
+      if (!ctx || !canvas) return;
       ctx.save();
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-
-      // Get wave color from CSS variable, with a fallback
-      let waveColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-cyan').trim();
-      if (!waveColor) {
-          waveColor = '#00ffcc'; // Fallback color if CSS var is not found
-      }
-      ctx.strokeStyle = waveColor;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = '#4df5d0';
       ctx.lineWidth = 2;
       ctx.beginPath();
-
       const yOffset = canvas.height / 2;
-      const freqScale = 0.02; // Adjusted for a common visual appeal
-
-      // Move to the starting point of the wave
-      ctx.moveTo(0, yOffset + amp * Math.sin(0 * freq * freqScale + time));
+      const freqScale = 0.02;
+      ctx.moveTo(0, yOffset + amp * Math.sin(time));
 
       for (let x = 0; x < canvas.width; x++) {
         const y = yOffset + amp * Math.sin(x * freq * freqScale + time);
@@ -770,34 +544,24 @@
     }
 
     function animate() {
-        if (!ctx || !canvas) return; // Don't animate if canvas isn't set up
-        drawWave();
-        time += 0.05; // Increment time for wave phase animation
-        requestAnimationFrame(animate); // Loop the animation
+      if (!ctx || !canvas) return;
+      drawWave();
+      time += 0.05;
+      requestAnimationFrame(animate);
     }
 
-    // Call functions to initialize when the DOM is ready
     document.addEventListener('DOMContentLoaded', function() {
-        createParticles(); // Initialize background particles
-        if (ctx && canvas) { // Only start animation if canvas is ready
-             animate(); // Start the wave animation
-        }
+      initWebGLShader();
+      createParticles();
+      if (ctx && canvas) animate();
     });
 
-    // Back to top button functionality
     const backToTopBtn = document.getElementById('backToTopBtn');
     if (backToTopBtn) {
-        window.addEventListener('scroll', () => {
-            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-                backToTopBtn.style.display = 'block';
-            } else {
-                backToTopBtn.style.display = 'none';
-            }
-        });
-
-        backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+      window.addEventListener('scroll', () => {
+        backToTopBtn.style.display = (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) ? 'block' : 'none';
+      });
+      backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
   </script>
 </body>
