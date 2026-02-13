@@ -4,16 +4,17 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
 function FloatingPaths({ position }: { position: number }) {
-    const paths = Array.from({ length: 36 }, (_, i) => ({
+    const paths = Array.from({ length: 28 }, (_, i) => ({
         id: i,
-        d: `M-${380 - i * 5 * position} -${189 + i * 6}C-${
-            380 - i * 5 * position
-        } -${189 + i * 6} -${312 - i * 5 * position} ${216 - i * 6} ${
-            152 - i * 5 * position
-        } ${343 - i * 6}C${616 - i * 5 * position} ${470 - i * 6} ${
-            684 - i * 5 * position
-        } ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`,
-        width: 0.6 + i * 0.035,
+        d: `M-${360 - i * 6 * position} -${150 + i * 8}C-${
+            360 - i * 6 * position
+        } -${150 + i * 8} -${280 - i * 6 * position} ${180 - i * 6} ${
+            180 - i * 6 * position
+        } ${300 - i * 8}C${640 - i * 6 * position} ${420 - i * 8} ${
+            760 - i * 6 * position
+        } ${840 - i * 8} ${760 - i * 6 * position} ${840 - i * 8}`,
+        width: 1 + i * 0.06,
+        opacity: 0.22 + i * 0.02,
     }));
 
     return (
@@ -30,16 +31,16 @@ function FloatingPaths({ position }: { position: number }) {
                         key={path.id}
                         d={path.d}
                         strokeWidth={path.width}
-                        className="stroke-slate-900/45 dark:stroke-slate-100/45"
-                        strokeOpacity={0.2 + path.id * 0.02}
-                        initial={{ pathLength: 0.25, opacity: 0.5 }}
+                        strokeOpacity={path.opacity}
+                        className="stroke-cyan-400 dark:stroke-cyan-300"
+                        initial={{ pathLength: 0.15, opacity: 0.15 }}
                         animate={{
                             pathLength: 1,
-                            opacity: [0.25, 0.75, 0.25],
+                            opacity: [0.12, path.opacity, 0.12],
                             pathOffset: [0, 1, 0],
                         }}
                         transition={{
-                            duration: 16 + path.id * 0.35,
+                            duration: 10 + path.id * 0.5,
                             repeat: Number.POSITIVE_INFINITY,
                             ease: "linear",
                         }}
@@ -58,19 +59,21 @@ export function BackgroundPaths({
     const words = title.split(" ");
 
     return (
-        <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-white dark:bg-neutral-950">
-            <div className="absolute inset-0 opacity-80 dark:opacity-100">
+        <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-slate-950">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(6,182,212,0.35),transparent_35%),radial-gradient(circle_at_80%_10%,rgba(59,130,246,0.35),transparent_35%),radial-gradient(circle_at_70%_80%,rgba(14,165,233,0.25),transparent_40%)]" />
+
+            <div className="absolute inset-0">
                 <FloatingPaths position={1} />
                 <FloatingPaths position={-1} />
             </div>
 
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/40 dark:to-neutral-950/50" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-950/40 via-transparent to-slate-950/75" />
 
             <div className="relative z-10 container mx-auto px-4 text-center md:px-6">
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 2 }}
+                    transition={{ duration: 1.5 }}
                     className="mx-auto max-w-4xl"
                 >
                     <h1 className="mb-8 text-5xl font-bold tracking-tighter sm:text-7xl md:text-8xl">
@@ -82,17 +85,17 @@ export function BackgroundPaths({
                                 {word.split("").map((letter, letterIndex) => (
                                     <motion.span
                                         key={`${wordIndex}-${letterIndex}`}
-                                        initial={{ y: 100, opacity: 0 }}
+                                        initial={{ y: 80, opacity: 0 }}
                                         animate={{ y: 0, opacity: 1 }}
                                         transition={{
                                             delay:
                                                 wordIndex * 0.1 +
                                                 letterIndex * 0.03,
                                             type: "spring",
-                                            stiffness: 150,
-                                            damping: 25,
+                                            stiffness: 140,
+                                            damping: 20,
                                         }}
-                                        className="inline-block bg-gradient-to-r from-neutral-900 to-neutral-700/80 bg-clip-text text-transparent dark:from-white dark:to-white/80"
+                                        className="inline-block bg-gradient-to-r from-cyan-200 via-sky-300 to-blue-300 bg-clip-text text-transparent"
                                     >
                                         {letter}
                                     </motion.span>
@@ -101,10 +104,10 @@ export function BackgroundPaths({
                         ))}
                     </h1>
 
-                    <div className="group relative inline-block overflow-hidden rounded-2xl bg-gradient-to-b from-black/10 to-white/10 p-px shadow-lg backdrop-blur-lg transition-shadow duration-300 hover:shadow-xl dark:from-white/10 dark:to-black/10">
+                    <div className="group relative inline-block overflow-hidden rounded-2xl bg-gradient-to-r from-cyan-500/30 via-blue-500/20 to-cyan-500/30 p-px shadow-[0_0_30px_rgba(6,182,212,0.35)] backdrop-blur-lg transition-shadow duration-300 hover:shadow-[0_0_45px_rgba(56,189,248,0.5)]">
                         <Button
                             variant="ghost"
-                            className="rounded-[1.15rem] border border-black/10 bg-white/95 px-8 py-6 text-lg font-semibold text-black backdrop-blur-md transition-all duration-300 hover:bg-white group-hover:-translate-y-0.5 hover:shadow-md dark:border-white/10 dark:bg-black/95 dark:text-white dark:hover:bg-black dark:hover:shadow-neutral-800/50"
+                            className="rounded-[1.15rem] border border-cyan-300/30 bg-slate-900/90 px-8 py-6 text-lg font-semibold text-cyan-100 backdrop-blur-md transition-all duration-300 hover:bg-slate-900 group-hover:-translate-y-0.5"
                         >
                             <span className="opacity-90 transition-opacity group-hover:opacity-100">
                                 Discover Excellence
