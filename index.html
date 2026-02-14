@@ -231,7 +231,16 @@
       color: #d5def2;
     }
 
-    .whispers-text { color: #d8a8ff; cursor: pointer; font-weight: 700; }
+    .whispers-text {
+      color: #d8a8ff;
+      cursor: pointer;
+      font-weight: 700;
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+      font-size: inherit;
+    }
 
     #backToTopBtn {
       display: none;
@@ -323,7 +332,7 @@
 
     <section>
       <div class="content-card">
-        <p><span class="whispers-text" onclick="ShowHiddenText();">𝖂𝖍𝖎𝖘𝖕𝖊𝖗𝖘 𝖔𝖋 𝖙𝖍𝖊 𝕾𝖔𝖚𝖑</span></p>
+        <p><button id="whispersBtn" type="button" class="whispers-text" onclick="ShowHiddenText();" aria-expanded="false" aria-controls="HiddenTextContainer" aria-label="Whispers of the Soul">𝖂𝖍𝖎𝖘𝖕𝖊𝖗𝖘 𝖔𝖋 𝖙𝖍𝖊 𝕾𝖔𝖚𝖑</button></p>
         <div id="HiddenTextContainer" style="display: none;">Before time, from deep silence, a secret song woven of numbers, shapes, and dreams stirred, awakening the universe.</div>
       </div>
     </section>
@@ -375,8 +384,11 @@
 
     function ShowHiddenText() {
       const container = document.getElementById('HiddenTextContainer');
+      const btn = document.getElementById('whispersBtn');
       if (!container) return;
-      container.style.display = (container.style.display === 'none' || container.style.display === '') ? 'block' : 'none';
+      const isHidden = (container.style.display === 'none' || container.style.display === '');
+      container.style.display = isHidden ? 'block' : 'none';
+      if (btn) btn.setAttribute('aria-expanded', isHidden);
     }
 
     const canvas = document.getElementById('waveCanvas');
