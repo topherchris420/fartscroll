@@ -421,8 +421,11 @@
       ctx.restore();
     }
 
+    // Optimization: Stop animation loop when canvas is not visible to save CPU/GPU
+    let isCanvasVisible = false;
+
     function animate() {
-      if (!ctx || !canvas) return;
+      if (!ctx || !canvas || !isCanvasVisible) return;
       drawWave();
       time += 0.05;
       requestAnimationFrame(animate);
@@ -430,7 +433,23 @@
 
     document.addEventListener('DOMContentLoaded', function() {
       createParticles();
-      if (ctx && canvas) animate();
+      if (ctx && canvas) {
+        // Use IntersectionObserver to toggle animation loop based on visibility
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              if (!isCanvasVisible) {
+                isCanvasVisible = true;
+                animate();
+              }
+            } else {
+              isCanvasVisible = false;
+            }
+          });
+        }, { threshold: 0 });
+
+        observer.observe(canvas);
+      }
     });
 
     const backToTopBtn = document.getElementById('backToTopBtn');

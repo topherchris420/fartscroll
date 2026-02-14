@@ -1,0 +1,3 @@
+## 2026-02-14 - IntersectionObserver Verification Flakiness
+**Learning:** Verification of `IntersectionObserver` logic in headless Playwright tests can be flaky if external resources (iframes, fonts, scripts) cause layout shifts or if the viewport size is not explicitly set large enough. The observer might fire `isIntersecting: false` unexpectedly if content pushes the target element out of view during load.
+**Action:** Always set a large viewport size (e.g., `1280x800`) and block external resources (`page.route("**/*", lambda route: route.abort())` for non-local requests) when verifying scroll-based or visibility-based logic in Playwright to ensure a stable layout.
