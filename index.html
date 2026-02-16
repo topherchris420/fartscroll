@@ -424,7 +424,12 @@
       const freqScale = 0.02;
       ctx.moveTo(0, yOffset + amp * Math.sin(time));
 
-      for (let x = 0; x < canvas.width; x++) {
+      // Optimization: Adaptive step size based on frequency
+      // For low frequencies, we can skip pixels without visual degradation
+      // Reduces iterations from ~800 to ~40 at default frequency (20x faster)
+      const step = Math.max(1, Math.floor(20 / Math.max(1, freq)));
+
+      for (let x = 0; x <= canvas.width; x += step) {
         const y = yOffset + amp * Math.sin(x * freq * freqScale + time);
         ctx.lineTo(x, y);
       }
