@@ -250,7 +250,10 @@
     }
 
     #backToTopBtn {
-      display: none;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease, background-color 0.2s ease;
       position: fixed;
       right: 20px;
       bottom: 20px;
@@ -262,6 +265,18 @@
       width: 46px;
       height: 46px;
       cursor: pointer;
+    }
+
+    #backToTopBtn.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    #backToTopBtn:hover {
+      background-color: var(--brand);
+      color: var(--bg);
+      transform: translateY(-2px);
     }
 
     @media (max-width: 920px) {
@@ -478,7 +493,8 @@
     const backToTopBtn = document.getElementById('backToTopBtn');
     if (backToTopBtn) {
       window.addEventListener('scroll', () => {
-        backToTopBtn.style.display = (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) ? 'block' : 'none';
+        const shouldShow = (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300);
+        backToTopBtn.classList.toggle('visible', shouldShow);
       });
       backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }

@@ -9,3 +9,7 @@
 ## 2024-05-24 - Enhancing Range Sliders
 **Learning:** Default range sliders lack clear focus indicators in some browsers, and unassociated labels reduce click targets.
 **Action:** Always link labels with `for` attributes and ensure `input[type="range"]` has a distinct `:focus-visible` style using the brand color.
+
+## 2026-02-17 - Smooth Transitions for Floating Elements
+**Learning:** Abrupt display toggles (using `display: none` to `block`) for floating elements like "Back to Top" buttons feel unpolished and can be jarring.
+**Action:** Use CSS transitions on `opacity` and `visibility` instead of toggling `display`. This creates a smooth fade-in/out effect. Ensure `visibility: hidden` is applied when opacity is 0 to prevent interaction with the invisible element.
