@@ -264,12 +264,23 @@
       cursor: pointer;
     }
 
+    #scroll-sentinel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1px;
+      height: 300px;
+      pointer-events: none;
+      visibility: hidden;
+    }
+
     @media (max-width: 920px) {
       .interactive-grid, .philosophy-content { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
+  <div id="scroll-sentinel"></div>
   <div class="bg-particles" id="particles"></div>
 
   <main class="page">
@@ -476,10 +487,22 @@
     });
 
     const backToTopBtn = document.getElementById('backToTopBtn');
-    if (backToTopBtn) {
-      window.addEventListener('scroll', () => {
-        backToTopBtn.style.display = (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) ? 'block' : 'none';
+    const scrollSentinel = document.getElementById('scroll-sentinel');
+
+    if (backToTopBtn && scrollSentinel) {
+      // Optimization: Use IntersectionObserver instead of scroll event listener
+      // to toggle visibility. This reduces main thread work during scrolling.
+      const observer = new IntersectionObserver((entries) => {
+        if (!entries[0].isIntersecting) {
+          // Sentinel (top 300px) is out of view, show button
+          backToTopBtn.style.display = 'block';
+        } else {
+          // Sentinel is in view, hide button
+          backToTopBtn.style.display = 'none';
+        }
       });
+      observer.observe(scrollSentinel);
+
       backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
   </script>
