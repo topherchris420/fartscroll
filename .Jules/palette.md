@@ -5,3 +5,7 @@
 2. Use `aria-label` to provide the plain text version for screen readers.
 3. Reset button styles (background, border) to maintain the visual design.
 4. Add `aria-expanded` and `aria-controls` for toggle interactions.
+
+## 2024-05-24 - Enhancing Range Sliders
+**Learning:** Default range sliders lack clear focus indicators in some browsers, and unassociated labels reduce click targets.
+**Action:** Always link labels with `for` attributes and ensure `input[type="range"]` has a distinct `:focus-visible` style using the brand color.
