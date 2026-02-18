@@ -249,8 +249,18 @@
       font-size: inherit;
     }
 
+    #scroll-sentinel {
+      position: absolute;
+      top: 0;
+      height: 300px;
+      width: 1px;
+      pointer-events: none;
+      opacity: 0;
+      left: 0;
+    }
+
     #backToTopBtn {
-      display: none;
+      /* display: none; Removed for perf optimization */
       position: fixed;
       right: 20px;
       bottom: 20px;
@@ -262,6 +272,18 @@
       width: 46px;
       height: 46px;
       cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+      pointer-events: none;
+    }
+
+    #backToTopBtn.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
     }
 
     @media (max-width: 920px) {
@@ -270,6 +292,7 @@
   </style>
 </head>
 <body>
+  <div id="scroll-sentinel"></div>
   <div class="bg-particles" id="particles"></div>
 
   <main class="page">
@@ -476,10 +499,17 @@
     });
 
     const backToTopBtn = document.getElementById('backToTopBtn');
-    if (backToTopBtn) {
-      window.addEventListener('scroll', () => {
-        backToTopBtn.style.display = (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) ? 'block' : 'none';
+    const sentinel = document.getElementById('scroll-sentinel');
+    if (backToTopBtn && sentinel) {
+      // Optimization: Use IntersectionObserver to avoid main-thread scroll listener
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          backToTopBtn.classList.remove('visible');
+        } else {
+          backToTopBtn.classList.add('visible');
+        }
       });
+      observer.observe(sentinel);
       backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
   </script>
