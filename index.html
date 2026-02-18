@@ -250,7 +250,10 @@
     }
 
     #backToTopBtn {
-      display: none;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      pointer-events: none;
       position: fixed;
       right: 20px;
       bottom: 20px;
@@ -262,6 +265,22 @@
       width: 46px;
       height: 46px;
       cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #backToTopBtn.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    #backToTopBtn:hover {
+      transform: translateY(-4px);
+      background: var(--brand);
+      color: var(--bg-soft);
+      border-color: var(--brand);
+      box-shadow: 0 4px 12px rgba(77, 245, 208, 0.3);
     }
 
     @media (max-width: 920px) {
@@ -477,9 +496,17 @@
 
     const backToTopBtn = document.getElementById('backToTopBtn');
     if (backToTopBtn) {
-      window.addEventListener('scroll', () => {
-        backToTopBtn.style.display = (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) ? 'block' : 'none';
-      });
+      const toggleBackToTop = () => {
+        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+          backToTopBtn.classList.add('visible');
+        } else {
+          backToTopBtn.classList.remove('visible');
+        }
+      };
+
+      window.addEventListener('scroll', toggleBackToTop);
+      toggleBackToTop(); // Initial check
+
       backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
   </script>
