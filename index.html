@@ -5,6 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vers3Dynamics</title>
+  <meta name="description" content="Vers3Dynamics explores the convergence of cymatics, agentic AI, and living systems through interactive waveform visualization and creative expression.">
   <link rel="icon" href="Mystic.png" type="image/png">
   <link rel="shortcut icon" href="Mystic.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -249,6 +250,18 @@
       font-size: inherit;
     }
 
+    .hidden-text {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.4s ease, max-height 0.4s ease;
+    }
+
+    .hidden-text.visible {
+      opacity: 1;
+      max-height: 200px;
+    }
+
     #backToTopBtn {
       opacity: 0;
       visibility: hidden;
@@ -304,7 +317,7 @@
 
       <div class="interactive-grid">
         <div class="panel">
-          <canvas id="waveCanvas" width="800" height="400"></canvas>
+          <canvas id="waveCanvas" width="800" height="400" role="img" aria-label="Interactive waveform visualization"></canvas>
         </div>
 
         <aside class="panel controls">
@@ -358,8 +371,8 @@
 
     <section>
       <div class="content-card">
-        <p><button id="whispersBtn" type="button" class="whispers-text" onclick="ShowHiddenText();" aria-expanded="false" aria-controls="HiddenTextContainer" aria-label="Whispers of the Soul">𝖂𝖍𝖎𝖘𝖕𝖊𝖗𝖘 𝖔𝖋 𝖙𝖍𝖊 𝕾𝖔𝖚𝖑</button></p>
-        <div id="HiddenTextContainer" style="display: none;">Before time, from deep silence, a secret song woven of numbers, shapes, and dreams stirred, awakening the universe.</div>
+        <p><button id="whispersBtn" type="button" class="whispers-text" aria-expanded="false" aria-controls="HiddenTextContainer" aria-label="Whispers of the Soul">𝖂𝖍𝖎𝖘𝖕𝖊𝖗𝖘 𝖔𝖋 𝖙𝖍𝖊 𝕾𝖔𝖚𝖑</button></p>
+        <div id="HiddenTextContainer" class="hidden-text">Before time, from deep silence, a secret song woven of numbers, shapes, and dreams stirred, awakening the universe.</div>
       </div>
     </section>
 
@@ -408,13 +421,18 @@
       });
     }
 
-    function ShowHiddenText() {
+    function toggleHiddenText() {
       const container = document.getElementById('HiddenTextContainer');
       const btn = document.getElementById('whispersBtn');
       if (!container) return;
-      const isHidden = (container.style.display === 'none' || container.style.display === '');
-      container.style.display = isHidden ? 'block' : 'none';
-      if (btn) btn.setAttribute('aria-expanded', isHidden);
+      const isHidden = !container.classList.contains('visible');
+      container.classList.toggle('visible', isHidden);
+      if (btn) btn.setAttribute('aria-expanded', String(isHidden));
+    }
+
+    const whispersBtn = document.getElementById('whispersBtn');
+    if (whispersBtn) {
+      whispersBtn.addEventListener('click', toggleHiddenText);
     }
 
     const canvas = document.getElementById('waveCanvas');
@@ -504,8 +522,17 @@
         }
       };
 
-      window.addEventListener('scroll', toggleBackToTop);
-      toggleBackToTop(); // Initial check
+      let scrollTicking = false;
+      window.addEventListener('scroll', () => {
+        if (!scrollTicking) {
+          requestAnimationFrame(() => {
+            toggleBackToTop();
+            scrollTicking = false;
+          });
+          scrollTicking = true;
+        }
+      });
+      toggleBackToTop();
 
       backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
