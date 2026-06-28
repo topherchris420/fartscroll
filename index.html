@@ -286,96 +286,479 @@
     @media (max-width: 920px) {
       .interactive-grid, .philosophy-content { grid-template-columns: 1fr; }
     }
+
+    body[data-layout="split-scroll"] {
+      --bg: #080807;
+      --surface: rgba(255, 255, 255, 0.065);
+      --surface-strong: rgba(255, 255, 255, 0.1);
+      --line: rgba(247, 239, 221, 0.18);
+      --text: #f7efdd;
+      --muted: #c7baa4;
+      --ink: #080807;
+      --theme: #45f0c8;
+      min-height: 100vh;
+      background: var(--bg);
+      transition: background-color 0.5s ease, color 0.5s ease;
+    }
+
+    body[data-theme="signal"] { --theme: #45f0c8; --bg: #080807; --muted: #c7baa4; }
+    body[data-theme="meaning"] { --theme: #f4c95d; --bg: #120f08; --muted: #d4c2a0; }
+    body[data-theme="media"] { --theme: #ff7a59; --bg: #120b0a; --muted: #d8b7aa; }
+    body[data-theme="archive"] { --theme: #8fd0ff; --bg: #071014; --muted: #b4c9d4; }
+    body[data-theme="contact"] { --theme: #d6a4ff; --bg: #100b13; --muted: #d0bddb; }
+
+    html { scroll-behavior: smooth; }
+    body[data-layout="split-scroll"] a { color: var(--theme); text-underline-offset: 0.2em; }
+    body[data-layout="split-scroll"] button,
+    body[data-layout="split-scroll"] input { font: inherit; }
+
+    body[data-layout="split-scroll"] .bg-particles { opacity: 0.45; }
+    body[data-layout="split-scroll"] .particle {
+      width: 1px;
+      height: 16px;
+      border-radius: 0;
+      background: var(--theme);
+      opacity: 0.18;
+      transition: background-color 0.5s ease;
+    }
+
+    .split-scroll-shell {
+      display: grid;
+      grid-template-columns: minmax(360px, 46vw) minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .split-visual {
+      position: sticky;
+      top: 0;
+      align-self: start;
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 1.4rem;
+      padding: 2rem;
+      border-right: 1px solid var(--line);
+      background: #080807;
+    }
+
+    .split-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .split-nav a {
+      min-height: 2.25rem;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.35rem 0.75rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-decoration: none;
+      transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+    }
+
+    .split-nav a[aria-current="true"],
+    .split-nav a:hover {
+      color: var(--text);
+      border-color: var(--theme);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    body[data-layout="split-scroll"] #changeColorBtn {
+      justify-self: start;
+      max-width: 48rem;
+      border-radius: 8px;
+      color: var(--muted);
+      background: var(--surface);
+      border-color: var(--line);
+    }
+
+    body[data-layout="split-scroll"] #changeColorBtn:hover {
+      color: var(--text);
+      border-color: var(--theme);
+    }
+
+    .hero-copy { align-self: end; padding-top: 1rem; }
+
+    .eyebrow,
+    .panel-kicker {
+      color: var(--theme);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .hero-copy h1 {
+      margin-top: 0.6rem;
+      font-size: 4.8rem;
+      line-height: 0.9;
+      letter-spacing: 0;
+      font-weight: 800;
+    }
+
+    .hero-copy p:last-child {
+      max-width: 35rem;
+      margin-top: 1rem;
+      color: var(--muted);
+      font-size: 1.06rem;
+    }
+
+    .visual-stage {
+      position: relative;
+      min-height: 22rem;
+      display: grid;
+      align-items: stretch;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #050505;
+    }
+
+    .visual-mask,
+    .visual-mask img,
+    body[data-layout="split-scroll"] canvas {
+      grid-area: 1 / 1;
+      width: 100%;
+      height: 100%;
+    }
+
+    .visual-mask {
+      clip-path: polygon(0 0, 75% 0, 100% 50%, 75% 100%, 0 100%);
+      opacity: 0.42;
+      mix-blend-mode: screen;
+      transition: opacity 0.5s ease, clip-path 0.5s ease;
+    }
+
+    .visual-mask img {
+      display: block;
+      object-fit: cover;
+      filter: grayscale(0.35) contrast(1.1);
+    }
+
+    body[data-layout="split-scroll"] canvas {
+      position: relative;
+      z-index: 1;
+      min-height: 22rem;
+      background: transparent;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    body[data-layout="split-scroll"] .controls {
+      display: grid;
+      gap: 0.85rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 1rem;
+      background: var(--surface);
+    }
+
+    body[data-layout="split-scroll"] .controls label {
+      margin: 0;
+      color: var(--text);
+    }
+
+    body[data-layout="split-scroll"] input[type="range"] { accent-color: var(--theme); }
+
+    body[data-layout="split-scroll"] input[type="range"]:focus-visible,
+    body[data-layout="split-scroll"] button:focus-visible,
+    body[data-layout="split-scroll"] a:focus-visible {
+      outline: 2px solid var(--theme);
+      outline-offset: 3px;
+    }
+
+    body[data-layout="split-scroll"] #freqValue,
+    body[data-layout="split-scroll"] #ampValue {
+      color: var(--ink);
+      background: var(--theme);
+      border: 0;
+    }
+
+    body[data-layout="split-scroll"] #equationBtn {
+      min-height: 2.8rem;
+      border-radius: 8px;
+      color: var(--text);
+      border-color: var(--line);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    body[data-layout="split-scroll"] #equationBtn:hover { border-color: var(--theme); }
+
+    .scroll-story {
+      background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 4rem 4rem;
+    }
+
+    .scroll-panel {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      margin-top: 0;
+      padding: 5rem min(7vw, 5rem);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-content { width: min(100%, 48rem); }
+
+    .panel-content h2 {
+      margin-top: 0.8rem;
+      font-size: 3.4rem;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .panel-content > p {
+      max-width: 42rem;
+      margin-top: 1rem;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    body[data-layout="split-scroll"] .philosophy-content,
+    .media-grid,
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.8rem;
+      margin-top: 1.4rem;
+    }
+
+    body[data-layout="split-scroll"] .philosophy-card,
+    body[data-layout="split-scroll"] .content-card,
+    .link-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 1rem;
+      background: var(--surface);
+      margin-bottom: 0;
+    }
+
+    body[data-layout="split-scroll"] .philosophy-card h3,
+    body[data-layout="split-scroll"] .content-card h3,
+    .link-card h3 {
+      color: var(--text);
+      font-size: 1rem;
+      line-height: 1.35;
+    }
+
+    body[data-layout="split-scroll"] .philosophy-card p,
+    body[data-layout="split-scroll"] .content-card p,
+    .link-card p {
+      margin-top: 0.5rem;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    body[data-layout="split-scroll"] .philosophy-symbol {
+      display: inline-block;
+      min-width: 1.35rem;
+      color: var(--theme);
+    }
+
+    body[data-layout="split-scroll"] iframe,
+    body[data-layout="split-scroll"] img,
+    body[data-layout="split-scroll"] audio { border-radius: 8px; }
+
+    .feature-image {
+      margin-top: 1.2rem;
+      aspect-ratio: 16 / 10;
+      object-position: center;
+    }
+
+    .equation-line {
+      margin-top: 0.8rem;
+      color: var(--theme);
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .support-card { margin-top: 1rem; }
+
+    .support-link {
+      display: inline-flex;
+      min-height: 2.75rem;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.75rem;
+      border: 1px solid var(--theme);
+      border-radius: 8px;
+      padding: 0.65rem 0.9rem;
+      color: var(--ink);
+      background: var(--theme);
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform 0.25s ease, filter 0.25s ease;
+    }
+
+    .support-link:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+    }
+
+    body[data-layout="split-scroll"] #HiddenTextContainer {
+      border-left-color: var(--theme);
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    body[data-layout="split-scroll"] .whispers-text { color: var(--theme); }
+
+    body[data-layout="split-scroll"] #backToTopBtn:hover {
+      background: var(--theme);
+      color: var(--ink);
+      border-color: var(--theme);
+    }
+
+    @media (max-width: 1040px) {
+      .split-scroll-shell { grid-template-columns: 1fr; }
+      .split-visual {
+        position: relative;
+        min-height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .hero-copy h1 { font-size: 3.5rem; }
+      .scroll-panel { min-height: auto; padding: 4rem 1.5rem; }
+    }
+
+    @media (max-width: 680px) {
+      .split-visual { padding: 1rem; }
+      .split-nav { justify-content: flex-start; }
+      .hero-copy h1 { font-size: 2.65rem; }
+      .panel-content h2 { font-size: 2.3rem; }
+      body[data-layout="split-scroll"] .philosophy-content,
+      .media-grid,
+      .link-grid { grid-template-columns: 1fr; }
+      .visual-stage,
+      body[data-layout="split-scroll"] canvas { min-height: 17rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
 </head>
-<body>
+<body data-layout="split-scroll" data-theme="signal">
   <div class="bg-particles" id="particles"></div>
 
-  <main class="page">
-    <header class="hero">
-      <div class="hero-top">
-        <button id="changeColorBtn">“The wonderful thing about being an artist is that there is no end to creative expression. Painting is my life; my life is painting.”</button>
+  <main class="split-scroll-shell">
+    <aside class="split-visual" aria-label="Vers3Dynamics interactive console">
+      <nav class="split-nav" aria-label="Page sections">
+        <a href="#signal" aria-current="true">Signal</a>
+        <a href="#meaning">Meaning</a>
+        <a href="#media">Media</a>
+        <a href="#archive">Archive</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <button id="changeColorBtn">"The wonderful thing about being an artist is that there is no end to creative expression. Painting is my life; my life is painting."</button>
+
+      <header class="hero-copy">
+        <p class="eyebrow">Harmonics / Waveform Odyssey</p>
+        <h1 id="site-title">Vers3Dynamics</h1>
+        <p>Scroll through a living signal board where the canvas, color, and story keep tuning themselves around the work.</p>
+      </header>
+
+      <div class="visual-stage" aria-label="Animated waveform visual">
+        <div class="visual-mask" aria-hidden="true"><img src="Mystic.png" alt=""></div>
+        <canvas id="waveCanvas" width="800" height="400"></canvas>
       </div>
 
-      <div class="header">
-        <h1>ƨɔimɒnyᗡƐƨɿɘV</h1>
-        <p>Harmonics • Waveform Odyssey</p>
-      </div>
+      <aside class="controls" aria-label="Waveform controls">
+        <label for="frequency">Frequency <span id="freqValue">1</span></label>
+        <input type="range" id="frequency" min="1" max="50" value="1">
 
-      <div class="interactive-grid">
-        <div class="panel">
-          <canvas id="waveCanvas" width="800" height="400"></canvas>
+        <label for="amplitude">Amplitude <span id="ampValue">50</span></label>
+        <input type="range" id="amplitude" min="10" max="100" value="50">
+
+        <a href="https://archive.org/details/hemisync-gateway-5.6-exploring-focus-15/Hemisync+-+Gateway5.1+-+Advanced+Focus+12.mp3" target="_blank" id="equationBtn" rel="noreferrer">
+          K(b,a) = ∫ D[x(t)] e<sup>iS[x(t)]/ħ</sup>
+        </a>
+      </aside>
+    </aside>
+
+    <div class="scroll-story">
+      <section id="signal" class="scroll-panel" data-theme-step="signal">
+        <div class="panel-content">
+          <p class="panel-kicker">01 / signal-first systems</p>
+          <h2>Scroll becomes the instrument.</h2>
+          <p>Vers3Dynamics treats motion, waveform, and perception as one interface. The page now opens like a split-screen lab console: a fixed signal surface on the left, a sequence of focused ideas on the right.</p>
+          <img src="hero_verification.png" alt="Layered waveform verification visual" class="feature-image">
         </div>
+      </section>
 
-        <aside class="panel controls">
-          <label for="frequency">Frequency <span id="freqValue">1</span></label>
-          <input type="range" id="frequency" min="1" max="50" value="1">
+      <section id="meaning" class="scroll-panel" data-theme-step="meaning">
+        <div class="panel-content">
+          <p class="panel-kicker">02 / architecture of meaning</p>
+          <h2>Pattern is the doorway.</h2>
+          <p>Reality functions as a meaning machine operating through interconnectivity, where connections and relationships produce significance from a sea of magic.</p>
+          <div class="philosophy-content">
+            <div class="philosophy-card"><h3><span class="philosophy-symbol">⚛</span>Knowledge and Understanding</h3><p>Knowledge acts as a language of significance for navigating what we cannot fully know.</p></div>
+            <div class="philosophy-card"><h3><span class="philosophy-symbol">◊</span>Geometry and Space</h3><p>Geometry reveals the rule-set that shapes dimensions, form, and possibility.</p></div>
+            <div class="philosophy-card"><h3><span class="philosophy-symbol">∞</span>Synchronicity</h3><p>Meaningful coincidence uncovers hidden relationships across experience.</p></div>
+            <div class="philosophy-card"><h3><span class="philosophy-symbol">⦿</span>Consciousness as Pattern</h3><p>The mind is a pattern detector that transforms perception into participation.</p></div>
+          </div>
+        </div>
+      </section>
 
-          <label for="amplitude">Amplitude <span id="ampValue">50</span></label>
-          <input type="range" id="amplitude" min="10" max="100" value="50">
+      <section id="media" class="scroll-panel" data-theme-step="media">
+        <div class="panel-content">
+          <p class="panel-kicker">03 / embodied media</p>
+          <h2>Let the work answer in image and voice.</h2>
+          <p>Avatar, video, and collection links sit together as active artifacts instead of a loose stack of embeds.</p>
+          <div class="media-grid">
+            <div class="content-card"><iframe src="https://embed.liveavatar.com/v1/85e2782e-46f7-4c5c-b324-2c058e34495a" allow="microphone" title="LiveAvatar Embed" style="aspect-ratio: 16/9;"></iframe></div>
+            <div class="content-card"><iframe width="560" height="315" src="https://app.heygen.com/embeds/276a5f4bfbb74a70a544b01c9d7f751e" title="HeyGen video player" allow="encrypted-media; fullscreen;" allowfullscreen></iframe></div>
+            <div class="link-card"><h3>Card Collection</h3><p><a href="https://courtyard.io/user/vers3dynamics/collection?sortBy=listingDate%3Adesc">Open the collection</a></p></div>
+            <div class="link-card"><h3>HumanTouch</h3><p><a href="https://humantouch.fun/">Enter Project ARCHON</a></p></div>
+          </div>
+        </div>
+      </section>
 
-          <a href="https://archive.org/details/hemisync-gateway-5.6-exploring-focus-15/Hemisync+-+Gateway5.1+-+Advanced+Focus+12.mp3" target="_blank" id="equationBtn">
-            K(b,a) = ∫ D[x(t)] e<sup>iS[x(t)]/ħ</sup>
-          </a>
-        </aside>
-      </div>
-    </header>
+      <section id="archive" class="scroll-panel" data-theme-step="archive">
+        <div class="panel-content">
+          <p class="panel-kicker">04 / recursive archive</p>
+          <h2>Research that can be seen, heard, and replayed.</h2>
+          <p>Vers3Dynamics and the Recursive Architecture of Intelligent Nexus (R.A.I.N. Lab) explores the convergence of cymatics, agentic AI, and living systems.</p>
+          <img src="interesting_photo.png" alt="There is no time" class="feature-image">
+          <p class="equation-line">e^(iπ) + 1 = 0</p>
+          <div class="content-card">
+            <h3>Podcast</h3>
+            <audio controls src="Vers3Dynamics_ AI, Cymatics, and Creative Innovation.wav">Your browser does not support the audio element.</audio>
+          </div>
+          <div class="support-card link-card">
+            <h3>Support the lab</h3>
+            <p>Help Vers3Dynamics keep building open signal-first tools, experiments, and research artifacts.</p>
+            <p><a class="support-link" href="https://buymeacoffee.com/vers3dynamics" target="_blank" rel="noreferrer">Support the lab</a></p>
+          </div>
+        </div>
+      </section>
 
-    <section class="philosophy-section">
-      <h2 class="philosophy-header">The Architecture of Meaning</h2>
-      <p class="philosophy-intro">Reality functions as a meaning machine operating through infinite interconnectivity, where connections and relationships are endless, producing significance from a sea of magic.</p>
-
-      <div class="philosophy-content">
-        <div class="philosophy-card"><h3><span class="philosophy-symbol">⚛</span>Knowledge and Understanding</h3><p>Knowledge acts as a language of significance for navigating what we cannot fully know.</p></div>
-        <div class="philosophy-card"><h3><span class="philosophy-symbol">◊</span>Geometry and Space</h3><p>Geometry reveals the rule-set that shapes dimensions, form, and possibility.</p></div>
-        <div class="philosophy-card"><h3><span class="philosophy-symbol">∞</span>Synchronicity</h3><p>Meaningful coincidence uncovers hidden relationships across experience.</p></div>
-        <div class="philosophy-card"><h3><span class="philosophy-symbol">⦿</span>Consciousness as Pattern</h3><p>The mind is a pattern detector that transforms perception into participation.</p></div>
-      </div>
-    </section>
-
-    <section>
-      <div class="content-card"><iframe src="https://embed.liveavatar.com/v1/85e2782e-46f7-4c5c-b324-2c058e34495a" allow="microphone" title="LiveAvatar Embed" style="aspect-ratio: 16/9;"></iframe></div>
-      <div class="content-card"><p><a href="https://courtyard.io/user/vers3dynamics/collection?sortBy=listingDate%3Adesc">Card Collection 🃏</a></p></div>
-      <div class="content-card"><iframe width="560" height="315" src="https://app.heygen.com/embeds/276a5f4bfbb74a70a544b01c9d7f751e" title="HeyGen video player" allow="encrypted-media; fullscreen;" allowfullscreen></iframe></div>
-    </section>
-
-    <section>
-      <div class="content-card">
-        <h3>Vers3Dynamics and the Recursive Architecture of Intelligent Nexus (R.A.I.N. Lab) explores the convergence of cymatics, agentic AI, and living systems.</h3>
-        <img src="interesting_photo.png" alt="There is no time" style="height: auto; margin: 12px 0;">
-        <p style="text-align:center; color: var(--brand);">e^(iπ) + 1 = 0</p>
-      </div>
-    </section>
-
-    <section>
-      <div class="content-card">
-        <h3>🎧 Podcast</h3>
-        <audio controls src="Vers3Dynamics_ AI, Cymatics, and Creative Innovation.wav">Your browser does not support the audio element.</audio>
-      </div>
-    </section>
-
-    <div class="gfm-embed" data-url="https://www.gofundme.com/f/fuel-vers3dynamics-tech-for-human-connection/widget/medium?sharesheet=manage hero&attribution_id=sl:6b11fef5-1d36-4872-8ae0-7d11e3bfc325"></div><script defer src="https://www.gofundme.com/static/js/embed.js"></script>
-
-    <section>
-      <div class="content-card">
-        <p><button id="whispersBtn" type="button" class="whispers-text" onclick="ShowHiddenText();" aria-expanded="false" aria-controls="HiddenTextContainer" aria-label="Whispers of the Soul">𝖂𝖍𝖎𝖘𝖕𝖊𝖗𝖘 𝖔𝖋 𝖙𝖍𝖊 𝕾𝖔𝖚𝖑</button></p>
-        <div id="HiddenTextContainer" style="display: none;">Before time, from deep silence, a secret song woven of numbers, shapes, and dreams stirred, awakening the universe.</div>
-      </div>
-    </section>
-
-    <section>
-      <div class="content-card"><iframe src="https://humantouch.fun/" width="600" height="400" title="Project ARCHON: Acoustic Resonance Covert Harmonics of Neurodynamics"></iframe></div>
-    </section>
-
-    <section>
-      <div class="content-card"><iframe src="https://vers3dynamics.substack.com/embed" width="480" height="320" style="border:1px solid #EEE; background:white;" scrolling="no"></iframe></div>
-    </section>
-
-    <section>
-      <div class="content-card">
-        <p>Self-published research paper "Reimagining Location as a Dynamic Variable in Object Properties: The Potential of Teleportation." <a href="https://vers3dynamics.com/an-essay-towards-a-new-theory-of-ontological-fluidity-quantum-teleportation-and-the-mutable-foundations-of-reality">Read the full story</a></p>
-      </div>
-    </section>
+      <section id="contact" class="scroll-panel" data-theme-step="contact">
+        <div class="panel-content">
+          <p class="panel-kicker">05 / open loops</p>
+          <h2>Follow the signal outward.</h2>
+          <p><button id="whispersBtn" type="button" class="whispers-text" onclick="ShowHiddenText();" aria-expanded="false" aria-controls="HiddenTextContainer" aria-label="Whispers of the Soul">𝖂𝖍𝖎𝖘𝖕𝖊𝖗𝖘 𝖔𝖋 𝖙𝖍𝖊 𝕾𝖔𝖚𝖑</button></p>
+          <div id="HiddenTextContainer" style="display: none;">Before time, from deep silence, a secret song woven of numbers, shapes, and dreams stirred, awakening the universe.</div>
+          <div class="link-grid">
+            <div class="content-card"><iframe src="https://vers3dynamics.substack.com/embed" width="480" height="320" style="border:1px solid #EEE; background:white;" scrolling="no" title="Vers3Dynamics Substack"></iframe></div>
+            <div class="link-card"><h3>Ontological Fluidity</h3><p>Self-published research paper "Reimagining Location as a Dynamic Variable in Object Properties: The Potential of Teleportation." <a href="https://vers3dynamics.com/an-essay-towards-a-new-theory-of-ontological-fluidity-quantum-teleportation-and-the-mutable-foundations-of-reality">Read the full story</a></p></div>
+          </div>
+        </div>
+      </section>
+    </div>
   </main>
 
   <button id="backToTopBtn" aria-label="Back to top">▲</button>
@@ -402,9 +785,15 @@
 
     const changeColorButton = document.getElementById('changeColorBtn');
     if (changeColorButton) {
+      const quotes = [
+        '"The wonderful thing about being an artist is that there is no end to creative expression."',
+        'Loïs Mailou Jones',
+        'Scroll is a signal. Motion is a measurement.'
+      ];
+      let quoteIndex = 0;
       changeColorButton.addEventListener('click', function() {
-        document.body.style.backgroundColor = 'black';
-        this.textContent = 'Loïs Mailou Jones';
+        quoteIndex = (quoteIndex + 1) % quotes.length;
+        this.textContent = quotes[quoteIndex];
       });
     }
 
@@ -475,6 +864,7 @@
 
     document.addEventListener('DOMContentLoaded', function() {
       createParticles();
+      initSplitScrollThemes();
       if (ctx && canvas) {
         // Use IntersectionObserver to toggle animation loop based on visibility
         const observer = new IntersectionObserver((entries) => {
@@ -494,6 +884,30 @@
       }
     });
 
+
+    function initSplitScrollThemes() {
+      const panels = document.querySelectorAll('.scroll-panel[data-theme-step]');
+      const navLinks = document.querySelectorAll('.split-nav a');
+      if (!panels.length) return;
+
+      const setCurrentNav = (id) => {
+        navLinks.forEach(link => {
+          const isCurrent = link.getAttribute('href') === `#${id}`;
+          link.setAttribute('aria-current', isCurrent ? 'true' : 'false');
+        });
+      };
+
+      const themeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            document.body.dataset.theme = entry.target.dataset.themeStep;
+            setCurrentNav(entry.target.id);
+          }
+        });
+      }, { rootMargin: '-35% 0px -45% 0px', threshold: 0 });
+
+      panels.forEach(panel => themeObserver.observe(panel));
+    }
     const backToTopBtn = document.getElementById('backToTopBtn');
     if (backToTopBtn) {
       const toggleBackToTop = () => {
