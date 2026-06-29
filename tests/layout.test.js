@@ -40,6 +40,11 @@ test("uses Buy Me a Coffee instead of the old GoFundMe widget", () => {
   assert.doesNotMatch(html, /gofundme/i);
   assert.match(html, /Support the lab/);
 });
+
+test("uses the resonance debt m4a for the podcast audio", () => {
+  assert.match(html, /<h3>Podcast<\/h3>\s*<audio controls src="resonance-debt-podcast\.m4a"/);
+  assert.doesNotMatch(html, /Vers3Dynamics_ AI, Cymatics, and Creative Innovation\.wav/);
+});
 test("uses the supplied octopus signal image in the first scroll panel", () => {
   assert.match(html, /<section id="signal"[\s\S]*<img src="carousel5-removebg-preview\.png"/);
   assert.doesNotMatch(html, /<section id="signal"[\s\S]*<img src="hero_verification\.png"/);
