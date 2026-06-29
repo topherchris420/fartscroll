@@ -45,6 +45,14 @@ test("uses the resonance debt m4a for the podcast audio", () => {
   assert.match(html, /<h3>Podcast<\/h3>\s*<audio controls src="resonance-debt-podcast\.m4a"/);
   assert.doesNotMatch(html, /Vers3Dynamics_ AI, Cymatics, and Creative Innovation\.wav/);
 });
+
+test("renders the path integral exponent unambiguously", () => {
+  const correctedEquation = "K(b,a) = \u222B \u{1D49F}[x(t)] e<sup>iS[x(t)]/\u210F</sup>";
+  const ambiguousEquation = "K(b,a) = \u222B D[x(t)] e<sup>iS[x(t)]/\u0127</sup>";
+
+  assert.ok(html.includes(correctedEquation));
+  assert.ok(!html.includes(ambiguousEquation));
+});
 test("uses the supplied octopus signal image in the first scroll panel", () => {
   assert.match(html, /<section id="signal"[\s\S]*<img src="carousel5-removebg-preview\.png"/);
   assert.doesNotMatch(html, /<section id="signal"[\s\S]*<img src="hero_verification\.png"/);
