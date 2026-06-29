@@ -40,3 +40,12 @@ test("uses Buy Me a Coffee instead of the old GoFundMe widget", () => {
   assert.doesNotMatch(html, /gofundme/i);
   assert.match(html, /Support the lab/);
 });
+test("uses the supplied octopus signal image in the first scroll panel", () => {
+  assert.match(html, /<section id="signal"[\s\S]*<img src="carousel5-removebg-preview\.png"/);
+  assert.doesNotMatch(html, /<section id="signal"[\s\S]*<img src="hero_verification\.png"/);
+});
+
+test("keeps the support CTA text readable against its button background", () => {
+  assert.match(html, /body\[data-layout="split-scroll"\]\s*\.support-link\s*{[\s\S]*color:\s*#080807;/);
+  assert.match(html, /body\[data-layout="split-scroll"\]\s*\.support-link\s*{[\s\S]*background:\s*#f7efdd;/);
+});

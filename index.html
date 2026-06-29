@@ -572,6 +572,12 @@
       object-position: center;
     }
 
+    .signal-image {
+      object-fit: contain;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
     .equation-line {
       margin-top: 0.8rem;
       color: var(--theme);
@@ -581,17 +587,17 @@
 
     .support-card { margin-top: 1rem; }
 
-    .support-link {
+    body[data-layout="split-scroll"] .support-link {
       display: inline-flex;
       min-height: 2.75rem;
       align-items: center;
       justify-content: center;
       margin-top: 0.75rem;
-      border: 1px solid var(--theme);
+      border: 1px solid #f7efdd;
       border-radius: 8px;
       padding: 0.65rem 0.9rem;
-      color: var(--ink);
-      background: var(--theme);
+      color: #080807;
+      background: #f7efdd;
       font-weight: 800;
       text-decoration: none;
       transition: transform 0.25s ease, filter 0.25s ease;
@@ -695,7 +701,7 @@
           <p class="panel-kicker">01 / signal-first systems</p>
           <h2>Scroll becomes the instrument.</h2>
           <p>Vers3Dynamics treats motion, waveform, and perception as one interface. The page now opens like a split-screen lab console: a fixed signal surface on the left, a sequence of focused ideas on the right.</p>
-          <img src="hero_verification.png" alt="Layered waveform verification visual" class="feature-image">
+          <img src="carousel5-removebg-preview.png" alt="Octopus researcher holding a tuning fork with multi-agent OS, edge hardware, and theoretical physics icons" class="feature-image signal-image">
         </div>
       </section>
 
