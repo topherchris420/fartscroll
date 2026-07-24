@@ -752,6 +752,25 @@
       color: var(--theme, var(--brand));
     }
 
+    /* A brief static/glitch flicker so tapping "Transmission" feels like
+       tuning into the next line rather than an instant flat text swap —
+       the site's own signal language, made physical. Stepped (not smooth)
+       easing reads as a broken signal resolving, not a generic transition. */
+    @keyframes signalTuneIn {
+      0% { transform: translate(0, 0); filter: none; opacity: 1; }
+      20% { transform: translate(-2px, 1px); filter: hue-rotate(18deg) saturate(1.4); opacity: 0.82; }
+      40% { transform: translate(2px, -1px); filter: hue-rotate(-14deg) saturate(1.4); opacity: 0.68; }
+      60% { transform: translate(-1px, 0); filter: hue-rotate(10deg); opacity: 0.85; }
+      80% { transform: translate(1px, 0); filter: none; opacity: 0.95; }
+      100% { transform: translate(0, 0); filter: none; opacity: 1; }
+    }
+
+    #changeColorBtn.tuning { animation: signalTuneIn 0.42s steps(2, end); }
+
+    @media (prefers-reduced-motion: reduce) {
+      #changeColorBtn.tuning { animation: none; }
+    }
+
     @keyframes whisperIn {
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
@@ -918,8 +937,22 @@
       ];
       let quoteIndex = 0;
       changeColorButton.addEventListener('click', function() {
-        quoteIndex = (quoteIndex + 1) % quotes.length;
-        this.textContent = quotes[quoteIndex];
+        const btn = this;
+        if (prefersReducedMotion.matches) {
+          quoteIndex = (quoteIndex + 1) % quotes.length;
+          btn.textContent = quotes[quoteIndex];
+          return;
+        }
+        btn.classList.add('tuning');
+        // Swap the text mid-glitch so the animation reads as the new line
+        // resolving out of the noise, not noise-then-swap-then-noise.
+        window.setTimeout(function() {
+          quoteIndex = (quoteIndex + 1) % quotes.length;
+          btn.textContent = quotes[quoteIndex];
+        }, 180);
+        window.setTimeout(function() {
+          btn.classList.remove('tuning');
+        }, 420);
       });
     }
 
