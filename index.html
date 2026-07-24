@@ -198,6 +198,31 @@
 
     #equationBtn:hover { transform: translateY(-2px); border-color: rgba(208, 109, 255, .5); }
 
+    #playToggleBtn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 2.75rem;
+      margin-top: 0.6rem;
+      border-radius: 14px;
+      border: 1px solid rgba(77, 245, 208, .35);
+      background: rgba(77, 245, 208, .09);
+      color: var(--brand);
+      font-weight: 700;
+      font-size: .9rem;
+      cursor: pointer;
+      transition: .25s ease;
+    }
+
+    #playToggleBtn:hover { transform: translateY(-2px); border-color: rgba(77, 245, 208, .6); }
+
+    #playToggleBtn[aria-pressed="true"] {
+      background: var(--brand);
+      color: #052e16;
+      border-color: var(--brand);
+    }
+
     section { margin-top: 1.6rem; }
 
     .philosophy-section {
@@ -339,6 +364,13 @@
       top: 0;
       align-self: start;
       min-height: 100vh;
+      /* This panel's own content (nav, quote, hero copy, canvas, controls)
+         can exceed 100vh on shorter screens; sticky elements don't clip or
+         scroll their own overflow, so without this the controls below the
+         canvas — including the tone toggle — become permanently unreachable
+         while the panel is pinned. */
+      max-height: 100vh;
+      overflow-y: auto;
       display: grid;
       grid-template-rows: auto auto 1fr auto;
       gap: 1.4rem;
@@ -765,6 +797,8 @@
         <label for="amplitude">Amplitude <span id="ampValue">50</span></label>
         <input type="range" id="amplitude" min="10" max="100" value="50">
 
+        <button type="button" id="playToggleBtn" aria-pressed="false">Play the tone</button>
+
         <a href="https://archive.org/details/hemisync-gateway-5.6-exploring-focus-15/Hemisync+-+Gateway5.1+-+Advanced+Focus+12.mp3" target="_blank" id="equationBtn" rel="noreferrer" aria-label="Path integral — opens the Hemi-Sync Gateway focus audio on archive.org">
           K(b,a) = ∫ 𝒟[x(t)] e<sup>iS[x(t)]/ℏ</sup>
         </a>
@@ -906,11 +940,79 @@
     if (ampSlider && ampValueSpan) { amp = parseFloat(ampSlider.value); ampValueSpan.textContent = ampSlider.value; }
 
     if (freqSlider) {
-      freqSlider.oninput = function() { freq = parseFloat(this.value); if (freqValueSpan) freqValueSpan.textContent = this.value; };
+      freqSlider.oninput = function() { freq = parseFloat(this.value); if (freqValueSpan) freqValueSpan.textContent = this.value; setAudioTarget(); };
     }
 
     if (ampSlider) {
-      ampSlider.oninput = function() { amp = parseFloat(this.value); if (ampValueSpan) ampValueSpan.textContent = this.value; };
+      ampSlider.oninput = function() { amp = parseFloat(this.value); if (ampValueSpan) ampValueSpan.textContent = this.value; setAudioTarget(); };
+    }
+
+    // Real Web Audio tone, opt-in only via the Play button (never autoplay).
+    // The oscillator is created once and left running permanently at gain 0
+    // when "stopped" — OscillatorNode can only be started once, so toggling
+    // gain rather than start/stop is the correct pattern for a replayable
+    // tone. Frequency and amplitude read the same `freq`/`amp` state that
+    // drives the cymatics pattern, so both respond together from one source
+    // of truth (an AnalyserNode would add complexity a single pure tone has
+    // no extra harmonic content to reveal).
+    let audioCtx = null;
+    let oscillatorNode = null;
+    let gainNode = null;
+    let isPlaying = false;
+
+    function audioFrequencyFor(sliderFreq) {
+      // Map the visual 1-50 slider range to ~110-880Hz (roughly A2-A5,
+      // exponential for even-sounding pitch steps): the slider's raw value
+      // used as literal Hz would be inaudible sub-bass.
+      const t = (sliderFreq - 1) / 49;
+      return 110 * Math.pow(8, t);
+    }
+
+    function ensureAudio() {
+      if (audioCtx) return true;
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return false;
+      audioCtx = new AudioContextClass();
+      oscillatorNode = audioCtx.createOscillator();
+      gainNode = audioCtx.createGain();
+      oscillatorNode.type = 'sine';
+      oscillatorNode.frequency.value = audioFrequencyFor(freq);
+      gainNode.gain.value = 0;
+      oscillatorNode.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      oscillatorNode.start();
+      return true;
+    }
+
+    function setAudioTarget() {
+      if (!audioCtx || !isPlaying) return;
+      const now = audioCtx.currentTime;
+      oscillatorNode.frequency.setTargetAtTime(audioFrequencyFor(freq), now, 0.05);
+      gainNode.gain.setTargetAtTime((amp / 100) * 0.15, now, 0.05);
+    }
+
+    const playToggleBtn = document.getElementById('playToggleBtn');
+    if (playToggleBtn) {
+      playToggleBtn.addEventListener('click', function() {
+        if (!ensureAudio()) {
+          this.textContent = 'Audio unavailable';
+          this.disabled = true;
+          return;
+        }
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        isPlaying = !isPlaying;
+        const now = audioCtx.currentTime;
+        gainNode.gain.cancelScheduledValues(now);
+        gainNode.gain.setValueAtTime(gainNode.gain.value, now);
+        if (isPlaying) {
+          oscillatorNode.frequency.setTargetAtTime(audioFrequencyFor(freq), now, 0.05);
+          gainNode.gain.linearRampToValueAtTime((amp / 100) * 0.15, now + 0.4);
+        } else {
+          gainNode.gain.linearRampToValueAtTime(0, now + 0.4);
+        }
+        this.textContent = isPlaying ? 'Stop the tone' : 'Play the tone';
+        this.setAttribute('aria-pressed', String(isPlaying));
+      });
     }
 
     let viewW = canvas ? canvas.width : 800;
@@ -935,37 +1037,72 @@
       drawWave();
     }
 
-    function traceWave(waveAmp, waveFreq, phase, step) {
-      const yOffset = viewH / 2;
-      const freqScale = 0.02;
-      ctx.beginPath();
-      ctx.moveTo(0, yOffset + waveAmp * Math.sin(phase));
-      for (let x = 0; x <= viewW; x += step) {
-        ctx.lineTo(x, yOffset + waveAmp * Math.sin(x * waveFreq * freqScale + phase));
-      }
-      ctx.stroke();
+    // Real cymatics: a small offscreen field of interfering point-wave
+    // sources (the actual mechanism behind Chladni/cymatics patterns),
+    // rendered low-res and scaled up so nodal bands read soft, like a real
+    // cymatics photograph, instead of a crisp pixel grid. Cheap enough
+    // (~10k cells x up to 6 sources) to stay well under a 60fps budget
+    // without a WebGL shader.
+    const FIELD_W = 140;
+    const FIELD_H = 80;
+    const fieldCanvas = document.createElement('canvas');
+    fieldCanvas.width = FIELD_W;
+    fieldCanvas.height = FIELD_H;
+    const fieldCtx = fieldCanvas.getContext('2d');
+    const fieldImage = fieldCtx ? fieldCtx.createImageData(FIELD_W, FIELD_H) : null;
+
+    function hexToRgb(hex) {
+      const clean = String(hex).replace('#', '').trim();
+      const full = clean.length === 3 ? clean.split('').map(function (c) { return c + c; }).join('') : clean;
+      const value = parseInt(full, 16);
+      if (Number.isNaN(value)) return { r: 69, g: 240, b: 200 };
+      return { r: (value >> 16) & 255, g: (value >> 8) & 255, b: value & 255 };
     }
 
     function drawWave() {
-      if (!ctx || !canvas) return;
+      if (!ctx || !canvas || !fieldCtx || !fieldImage) return;
       ctx.save();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Optimization: Adaptive step size based on frequency
-      // Reduces iterations from 800 to ~40 at default frequency
-      const step = Math.max(1, Math.floor(20 / Math.max(1, freq)));
+      const sourceCount = 3 + Math.min(3, Math.floor(freq / 12));
+      const sources = [];
+      for (let i = 0; i < sourceCount; i += 1) {
+        const angle = (i / sourceCount) * Math.PI * 2 + time * 0.05;
+        sources.push({
+          x: 0.5 + Math.cos(angle) * 0.34,
+          y: 0.5 + Math.sin(angle) * 0.34,
+        });
+      }
 
-      ctx.strokeStyle = waveColor;
+      const rgb = hexToRgb(waveColor);
+      const data = fieldImage.data;
+      const freqScale = 6 + freq * 0.35;
+      const ampNorm = amp / 100;
 
-      // Faint echo wave behind the main trace for depth
-      ctx.globalAlpha = 0.3;
-      ctx.lineWidth = 1.5;
-      traceWave(amp * 0.6, freq * 1.3, time * 0.8, step);
+      for (let py = 0; py < FIELD_H; py += 1) {
+        const ny = py / FIELD_H;
+        for (let px = 0; px < FIELD_W; px += 1) {
+          const nx = px / FIELD_W;
+          let sum = 0;
+          for (let s = 0; s < sources.length; s += 1) {
+            const dx = nx - sources[s].x;
+            const dy = ny - sources[s].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            sum += Math.sin(dist * freqScale * Math.PI * 2 - time * 2);
+          }
+          const value = Math.abs((sum / sources.length) * ampNorm);
+          const intensity = Math.max(0, value - 0.15) / 0.85; // carve nodal lines
+          const idx = (py * FIELD_W + px) * 4;
+          data[idx] = rgb.r * intensity;
+          data[idx + 1] = rgb.g * intensity;
+          data[idx + 2] = rgb.b * intensity;
+          data[idx + 3] = 255;
+        }
+      }
 
-      ctx.globalAlpha = 1;
-      ctx.lineWidth = 2.5;
-      traceWave(amp, freq, time, step);
-
+      fieldCtx.putImageData(fieldImage, 0, 0);
+      ctx.imageSmoothingEnabled = true;
+      ctx.drawImage(fieldCanvas, 0, 0, FIELD_W, FIELD_H, 0, 0, viewW, viewH);
       ctx.restore();
     }
 
