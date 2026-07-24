@@ -733,6 +733,35 @@
       transform: translateY(0);
     }
 
+    /* These grids are enumerated lists (four philosophy cards, four media
+       items, two contact links), not a single block — riding on the same
+       .reveal/.is-visible toggle already computed for the panel, each item
+       settles into place with its own short stagger instead of popping in
+       as one flat unit with the panel's fade. Opacity stays owned by the
+       parent .reveal fade; only the settle-in transform staggers here. */
+    .philosophy-content > .philosophy-card,
+    .media-grid > *,
+    .link-grid > * {
+      transform: translateY(16px);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.is-visible .philosophy-content > .philosophy-card,
+    .reveal.is-visible .media-grid > *,
+    .reveal.is-visible .link-grid > * {
+      transform: translateY(0);
+    }
+
+    .philosophy-content > .philosophy-card:nth-child(2),
+    .media-grid > *:nth-child(2),
+    .link-grid > *:nth-child(2) { transition-delay: 0.09s; }
+
+    .philosophy-content > .philosophy-card:nth-child(3),
+    .media-grid > *:nth-child(3) { transition-delay: 0.18s; }
+
+    .philosophy-content > .philosophy-card:nth-child(4),
+    .media-grid > *:nth-child(4) { transition-delay: 0.27s; }
+
     .split-nav a[aria-current="true"] {
       color: var(--ink);
       background: var(--theme);
@@ -784,6 +813,7 @@
         animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
+        transition-delay: 0s !important;
       }
     }
   </style>
