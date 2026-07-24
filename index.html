@@ -594,9 +594,16 @@
       font-size: 0.94rem;
     }
 
+    /* Meaning's four symbols are the section's own motif, unique on the
+       page — brought up to the display-type weight the equation line
+       already carries in Archive, instead of sitting as small icon
+       prefixes indistinguishable from Media/Archive's generic cards. */
     body[data-layout="split-scroll"] .philosophy-symbol {
-      display: inline-block;
-      min-width: 1.35rem;
+      display: block;
+      min-width: 0;
+      font-size: 2.75rem;
+      line-height: 1;
+      margin-bottom: 0.5rem;
       color: var(--theme);
     }
 
@@ -821,10 +828,10 @@
           <h2>Pattern is the doorway.</h2>
           <p>Reality functions as a meaning machine operating through interconnectivity, where connections and relationships produce significance from a sea of magic.</p>
           <div class="philosophy-content">
-            <div class="philosophy-card"><h3><span class="philosophy-symbol">⚛</span>Knowledge and Understanding</h3><p>Knowledge acts as a language of significance for navigating what we cannot fully know.</p></div>
-            <div class="philosophy-card"><h3><span class="philosophy-symbol">◊</span>Geometry and Space</h3><p>Geometry reveals the rule-set that shapes dimensions, form, and possibility.</p></div>
-            <div class="philosophy-card"><h3><span class="philosophy-symbol">∞</span>Synchronicity</h3><p>Meaningful coincidence uncovers hidden relationships across experience.</p></div>
-            <div class="philosophy-card"><h3><span class="philosophy-symbol">⦿</span>Consciousness as Pattern</h3><p>The mind is a pattern detector that transforms perception into participation.</p></div>
+            <div class="philosophy-card"><span class="philosophy-symbol" aria-hidden="true">⚛</span><h3>Knowledge and Understanding</h3><p>Knowledge acts as a language of significance for navigating what we cannot fully know.</p></div>
+            <div class="philosophy-card"><span class="philosophy-symbol" aria-hidden="true">◊</span><h3>Geometry and Space</h3><p>Geometry reveals the rule-set that shapes dimensions, form, and possibility.</p></div>
+            <div class="philosophy-card"><span class="philosophy-symbol" aria-hidden="true">∞</span><h3>Synchronicity</h3><p>Meaningful coincidence uncovers hidden relationships across experience.</p></div>
+            <div class="philosophy-card"><span class="philosophy-symbol" aria-hidden="true">⦿</span><h3>Consciousness as Pattern</h3><p>The mind is a pattern detector that transforms perception into participation.</p></div>
           </div>
         </div>
       </section>
