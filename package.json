@@ -2,6 +2,9 @@
   "name": "fartscroll",
   "version": "1.0.0",
   "main": "index.js",
+  "scripts": {
+    "test": "node --test tests/layout.test.js"
+  },
   "license": "MIT",
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",

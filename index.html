@@ -1023,19 +1023,23 @@
     // gain rather than start/stop is the correct pattern for a replayable
     // tone. Frequency and amplitude read the same `freq`/`amp` state that
     // drives the cymatics pattern, so both respond together from one source
-    // of truth (an AnalyserNode would add complexity a single pure tone has
-    // no extra harmonic content to reveal).
+    // of truth.
     let audioCtx = null;
     let oscillatorNode = null;
     let gainNode = null;
     let isPlaying = false;
 
     function audioFrequencyFor(sliderFreq) {
-      // Map the visual 1-50 slider range to ~110-880Hz (roughly A2-A5,
-      // exponential for even-sounding pitch steps): the slider's raw value
-      // used as literal Hz would be inaudible sub-bass.
+      // Map the visual 1-50 slider range to 220-880Hz (A3-A5,
+      // exponential for even-sounding pitch steps): 220Hz at default (slider 1)
+      // provides a warm, clearly audible fundamental on all speakers,
+      // crossing Concert A (440Hz) at mid-slider and reaching A5 (880Hz) at max.
       const t = (sliderFreq - 1) / 49;
-      return 110 * Math.pow(8, t);
+      return 220 * Math.pow(4, t);
+    }
+
+    function getTargetGain() {
+      return (amp / 100) * 0.25;
     }
 
     function ensureAudio() {
@@ -1046,8 +1050,8 @@
       oscillatorNode = audioCtx.createOscillator();
       gainNode = audioCtx.createGain();
       oscillatorNode.type = 'sine';
-      oscillatorNode.frequency.value = audioFrequencyFor(freq);
-      gainNode.gain.value = 0;
+      oscillatorNode.frequency.setValueAtTime(audioFrequencyFor(freq), audioCtx.currentTime);
+      gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
       oscillatorNode.connect(gainNode);
       gainNode.connect(audioCtx.destination);
       oscillatorNode.start();
@@ -1057,28 +1061,28 @@
     function setAudioTarget() {
       if (!audioCtx || !isPlaying) return;
       const now = audioCtx.currentTime;
-      oscillatorNode.frequency.setTargetAtTime(audioFrequencyFor(freq), now, 0.05);
-      gainNode.gain.setTargetAtTime((amp / 100) * 0.15, now, 0.05);
+      oscillatorNode.frequency.setTargetAtTime(audioFrequencyFor(freq), now, 0.03);
+      gainNode.gain.setTargetAtTime(getTargetGain(), now, 0.05);
     }
 
     const playToggleBtn = document.getElementById('playToggleBtn');
     if (playToggleBtn) {
-      playToggleBtn.addEventListener('click', function() {
+      playToggleBtn.addEventListener('click', async function() {
         if (!ensureAudio()) {
           this.textContent = 'Audio unavailable';
           this.disabled = true;
           return;
         }
-        if (audioCtx.state === 'suspended') audioCtx.resume();
+        if (audioCtx.state === 'suspended') {
+          await audioCtx.resume();
+        }
         isPlaying = !isPlaying;
         const now = audioCtx.currentTime;
-        gainNode.gain.cancelScheduledValues(now);
-        gainNode.gain.setValueAtTime(gainNode.gain.value, now);
         if (isPlaying) {
-          oscillatorNode.frequency.setTargetAtTime(audioFrequencyFor(freq), now, 0.05);
-          gainNode.gain.linearRampToValueAtTime((amp / 100) * 0.15, now + 0.4);
+          oscillatorNode.frequency.setTargetAtTime(audioFrequencyFor(freq), now, 0.03);
+          gainNode.gain.setTargetAtTime(getTargetGain(), now, 0.05);
         } else {
-          gainNode.gain.linearRampToValueAtTime(0, now + 0.4);
+          gainNode.gain.setTargetAtTime(0, now, 0.05);
         }
         this.textContent = isPlaying ? 'Stop the tone' : 'Play the tone';
         this.setAttribute('aria-pressed', String(isPlaying));

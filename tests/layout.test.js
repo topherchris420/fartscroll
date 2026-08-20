@@ -62,3 +62,11 @@ test("keeps the support CTA text readable against its button background", () => 
   assert.match(html, /body\[data-layout="split-scroll"\]\s*\.support-link\s*{[\s\S]*color:\s*#080807;/);
   assert.match(html, /body\[data-layout="split-scroll"\]\s*\.support-link\s*{[\s\S]*background:\s*#f7efdd;/);
 });
+
+test("includes tone toggle button and robust Web Audio synthesis", () => {
+  assert.match(html, /id="playToggleBtn"/);
+  assert.match(html, /Play the tone/);
+  assert.match(html, /audioFrequencyFor/);
+  assert.match(html, /audioCtx\.resume\(\)/);
+  assert.match(html, /setTargetAtTime/);
+});
